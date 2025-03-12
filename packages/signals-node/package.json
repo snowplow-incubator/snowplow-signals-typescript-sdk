@@ -1,0 +1,23 @@
+{
+  "name": "signals-node",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --minify --dts --out-dir dist --clean",
+    "lint": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "axios": "^1.8.2"
+  }
+}
