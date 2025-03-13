@@ -1,10 +1,10 @@
 import { axiosFetch } from "./axiosFetch";
-import { SignalsCore } from "./core/SignalsCore";
+import { SignalsCore } from "signals-core";
 import {
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
-} from "./core/types";
+} from "signals-core";
 
 export class Signals extends SignalsCore {
   constructor(params: SignalsCoreOptions) {

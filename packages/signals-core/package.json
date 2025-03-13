@@ -1,5 +1,5 @@
 {
-  "name": "signals-node",
+  "name": "signals-core",
   "version": "0.0.1",
   "scripts": {
     "build": "tsup",
@@ -16,10 +16,6 @@
     "@types/node": "^22.13.10",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2"
-  },
-  "dependencies": {
-    "axios": "^1.8.2",
-    "signals-core": "^0.0.1"
   },
   "files": [
     "dist"

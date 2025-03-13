@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SignalsFetchOptions, SignalsFetchResponse } from "./core/types";
+import { SignalsFetchOptions, SignalsFetchResponse } from "signals-core";
 
 export const axiosFetch = async (
   url: string,
