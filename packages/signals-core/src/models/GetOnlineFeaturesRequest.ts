@@ -2,9 +2,9 @@ import { EntityIdentifiers } from "./EntityIdentifiers";
 
 export class GetOnlineFeaturesRequest {
   "entities": EntityIdentifiers;
-  "featureService"?: string | null;
+  "feature_service"?: string | null;
   "features"?: Array<string> | null;
-  "fullFeatureNames"?: boolean;
+  "full_feature_names"?: boolean;
 
   static readonly discriminator: string | undefined = undefined;
 
@@ -23,7 +23,7 @@ export class GetOnlineFeaturesRequest {
       format: "",
     },
     {
-      name: "featureService",
+      name: "feature_service",
       baseName: "feature_service",
       type: "string",
       format: "",
@@ -35,7 +35,7 @@ export class GetOnlineFeaturesRequest {
       format: "",
     },
     {
-      name: "fullFeatureNames",
+      name: "full_feature_names",
       baseName: "full_feature_names",
       type: "boolean",
       format: "",

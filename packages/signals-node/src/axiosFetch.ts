@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SignalsFetchOptions, SignalsFetchResponse } from "signals-core";
+import { SignalsFetchOptions, SignalsFetchResponse } from "@snowplow/ai-core";
 
 export const axiosFetch = async (
   url: string,

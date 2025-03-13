@@ -3,8 +3,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "isolatedModules": false,
-    "resolveJsonModule": true,
-    "types": ["node"]
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

@@ -1,10 +1,10 @@
 import { axiosFetch } from "./axiosFetch";
-import { SignalsCore } from "signals-core";
-import {
+import { SignalsCore } from "@snowplow/ai-core";
+import type {
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
-} from "signals-core";
+} from "@snowplow/ai-core";
 
 export class Signals extends SignalsCore {
   constructor(params: SignalsCoreOptions) {

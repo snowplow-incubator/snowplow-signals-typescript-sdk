@@ -31,7 +31,7 @@ export abstract class SignalsCore {
     return fetchOptions;
   }
 
-  abstract fetch(
+  protected abstract fetch(
     url: string,
     options: SignalsFetchOptions
   ): Promise<SignalsFetchResponse>;

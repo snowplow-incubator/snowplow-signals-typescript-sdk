@@ -1,5 +1,5 @@
 export { SignalsCore } from "./SignalsCore";
-export {
+export type {
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
