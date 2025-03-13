@@ -14,7 +14,13 @@ export const axiosFetch = async (
 
   return {
     status: res.status,
-    text: async () => res.data,
+    text: async () => {
+      try {
+        return JSON.stringify(res.data);
+      } catch (err) {
+        return res.data;
+      }
+    },
     json: async () => res.data,
   };
 };

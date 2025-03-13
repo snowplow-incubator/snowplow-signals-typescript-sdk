@@ -2,7 +2,7 @@
   "name": "signals-node",
   "version": "0.0.1",
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --minify --dts --out-dir dist --clean",
+    "build": "tsup",
     "lint": "tsc"
   },
   "keywords": [],

@@ -1,3 +1,1 @@
-import { Signals } from "./Signals";
-
-export { Signals };
+export { Signals } from "./Signals";
