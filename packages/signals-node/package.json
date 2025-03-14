@@ -1,0 +1,32 @@
+{
+  "name": "@snowplow-ai/node",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tsup",
+    "lint": "tsc",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.10",
+    "jest": "^29.7.0",
+    "nock": "^14.0.1",
+    "ts-jest": "^29.2.6",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@snowplow/ai-core": "^0.0.1",
+    "axios": "^1.8.2"
+  },
+  "files": [
+    "dist"
+  ]
+}
