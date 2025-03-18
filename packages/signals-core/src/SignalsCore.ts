@@ -5,14 +5,54 @@ import {
   SignalsFetchOptions,
   SignalsFetchResponse,
 } from "./types";
-import { removeTrailingSlash } from "./utils";
+import { isJwtExpired, removeTrailingSlash } from "./utils";
 
 export abstract class SignalsCore {
   baseUrl: string;
+  organizationId: string;
+  apiKeyId: string;
+  apiKey: string;
+  private accessToken: string | undefined = undefined;
 
   constructor(params: SignalsCoreOptions) {
-    const { baseUrl } = params;
-    this.baseUrl = removeTrailingSlash(baseUrl);
+    this.baseUrl = removeTrailingSlash(params.baseUrl);
+    this.organizationId = params.organizationId;
+    this.apiKeyId = params.apiKeyId;
+    this.apiKey = params.apiKey;
+
+    const requiredParams = [
+      "baseUrl",
+      "apiKey",
+      "apiKeyId",
+      "organizationId",
+    ] as const;
+    const missingParams = requiredParams.filter((param) => !this[param]);
+    if (missingParams.length > 0) {
+      throw new Error(
+        `[Signals] ${missingParams.join(", ")} required for instantiation`
+      );
+    }
+  }
+
+  protected async _fetchToken(): Promise<string> {
+    const accessTokenUrl = process.env.BDP_NEXT
+      ? `https://next.console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`
+      : `https://console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`;
+
+    try {
+      const response = await this.fetch(accessTokenUrl, {
+        method: "GET",
+        headers: {
+          "X-API-Key-Id": this.apiKeyId,
+          "X-API-Key": this.apiKey,
+          "X-Signals-Sdk-Name": "signals-ts",
+        },
+      });
+      const responseJson = await response.json();
+      return responseJson["accessToken"];
+    } catch (e) {
+      throw new Error("[Signals] Failed to fetch access token");
+    }
   }
 
   _getFetchOptions(options: {
@@ -45,10 +85,26 @@ export abstract class SignalsCore {
     );
   }
 
+  private async _checkToken(token: string | undefined): Promise<string> {
+    if (token === undefined) {
+      return await this._fetchToken();
+    } else if (isJwtExpired(token)) {
+      // TODO: Can optimize slightly by storing the expiration time directly.
+      return await this._fetchToken();
+    } else {
+      return token;
+    }
+  }
+
   private async fetchResult<T>(
     url: string,
     options: SignalsFetchOptions
   ): Promise<T> {
+    const accessToken = await this._checkToken(this.accessToken);
+    this.accessToken = accessToken;
+    options.headers.Authorization =
+      options.headers.Authorization || `Bearer ${accessToken}`;
+
     const res = await this.fetch(url, options);
     const data = await res.json();
 

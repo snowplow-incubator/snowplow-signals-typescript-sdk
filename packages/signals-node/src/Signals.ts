@@ -8,11 +8,12 @@ import type {
 
 export class Signals extends SignalsCore {
   constructor(params: SignalsCoreOptions) {
-    if (!params.baseUrl) {
-      throw new Error("[Signals] baseUrl is required for instantiation");
-    }
-
-    super({ baseUrl: params.baseUrl });
+    super({
+      baseUrl: params.baseUrl,
+      apiKey: params.apiKey,
+      apiKeyId: params.apiKeyId,
+      organizationId: params.organizationId,
+    });
   }
 
   fetch(

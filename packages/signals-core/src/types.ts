@@ -12,4 +12,7 @@ export type SignalsFetchResponse<T = any> = {
 
 export type SignalsCoreOptions = {
   baseUrl: string;
+  apiKey: string;
+  apiKeyId: string;
+  organizationId: string;
 };
