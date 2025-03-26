@@ -23,7 +23,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@snowplow/ai-core": "^0.0.1",
+    "@snowplow/signals-core": "^0.0.1",
     "axios": "^1.8.2"
   },
   "files": [
