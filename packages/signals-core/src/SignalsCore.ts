@@ -109,7 +109,7 @@ export abstract class SignalsCore {
     const data = await res.json();
 
     if (res.status < 200 || res.status >= 400) {
-      // Log errors
+      throw new Error(`[Signals] ${res.status} ${res.text()}`);
     }
 
     return data;

@@ -1,0 +1,36 @@
+---
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - release/[0-9].[0-9].[0-9]
+  workflow_dispatch: null
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 22.x
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
+
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+      - name: Test
+        run: npm test

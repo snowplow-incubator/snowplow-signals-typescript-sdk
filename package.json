@@ -4,8 +4,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "npm run build --workspaces"
+    "test": "npm run test --workspaces --if-present",
+    "prepare": "npm run build --workspaces",
+    "build": "npm run clean:all && npm run build --workspaces",
+    "changeset": "changeset",
+    "changesets-release": "npm run build && npm run changeset publish",
+    "changesets-version": "npm run changeset version && npm install --package-lock-only",
+    "clean:all": "rimraf packages/signals-core/dist packages/signals-node/dist"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +20,9 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@changesets/cli": "^2.29.1",
     "@types/node": "^22.13.10",
+    "rimraf": "^6.0.1",
     "typescript": "^5.8.2"
   }
 }

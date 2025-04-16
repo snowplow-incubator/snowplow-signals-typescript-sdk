@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions: {}
+jobs:
+  release:
+    permissions:
+      contents: write # to create release
+      issues: write # to post issue comments
+      pull-requests: write # to create pull request
+
+    name: Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 22.x
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
+      - run: npm install
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm run changesets-release
+          version: npm run changesets-version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
