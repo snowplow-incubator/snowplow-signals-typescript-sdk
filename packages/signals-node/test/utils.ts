@@ -1,4 +1,4 @@
-import { SignalsCoreOptions } from "@snowplow/ai-core";
+import { SignalsCoreOptions } from "@snowplow/signals-core";
 import { Signals } from "../src";
 
 export const BASE_URL = "http://localhost:8000";

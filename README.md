@@ -1,4 +1,4 @@
-# snowplow-ai-typescript-sdk
+# snowplow-signals-typescript-sdk
 
 ## Development
 
