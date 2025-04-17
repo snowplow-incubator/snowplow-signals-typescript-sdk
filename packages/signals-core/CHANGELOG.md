@@ -1,5 +1,11 @@
 # @snowplow/signals-core
 
+## 0.0.4
+
+### Patch Changes
+
+- 184ae7e: Adjusting to new online-features API
+
 ## 0.0.3
 
 ### Patch Changes
