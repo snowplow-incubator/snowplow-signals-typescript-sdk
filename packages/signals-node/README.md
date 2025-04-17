@@ -24,9 +24,9 @@ const signals = new Signals({
   organizationId: ORG_ID,
 });
 
-const features = await signals.getOnlineFeatures({
+const attributes = await signals.getOnlineAttributes({
   entities: { session: ["session_identifier"] },
-  feature_service: "my_service",
+  service: "my_service",
 });
 ```
 

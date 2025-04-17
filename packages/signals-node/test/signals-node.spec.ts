@@ -12,14 +12,14 @@ describe("Signals", () => {
     const signals = createTestClient();
 
     await expect(async () => {
-      await signals.getOnlineFeatures({
+      await signals.getOnlineAttributes({
         entities: { session: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
-        feature_service: "session_features",
+        service: "session_attributes",
       });
     }).rejects.toThrow("[Signals] Failed to fetch access token");
   });
 
-  test("Should get online features using feature service", async () => {
+  test("Should get online attributes using feature service", async () => {
     nock(
       `https://console.snowplowanalytics.com/api/msc/v1/organizations/${MOCK_ORG_ID}/credentials/v3/token`
     )
@@ -27,9 +27,9 @@ describe("Signals", () => {
       .reply(200, { accessToken: "test" });
 
     nock(BASE_URL)
-      .post("/api/v1/get-online-features", {
+      .post("/api/v1/get-online-attributes", {
         entities: { session: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
-        feature_service: "session_features",
+        feature_service: "session_attributes",
       })
       .reply(200, {
         unique_product_names: [["Foo", "Bar"]],
@@ -38,12 +38,12 @@ describe("Signals", () => {
       });
 
     const signals = createTestClient();
-    const features = await signals.getOnlineFeatures({
+    const attributes = await signals.getOnlineAttributes({
       entities: { session: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
-      feature_service: "session_features",
+      service: "session_attributes",
     });
 
-    expect(features).toEqual({
+    expect(attributes).toEqual({
       unique_product_names: [["Foo", "Bar"]],
       add_to_cart_events_count: [1],
       min_cart_value: [10.4],
