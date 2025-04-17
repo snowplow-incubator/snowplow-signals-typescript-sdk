@@ -1,5 +1,13 @@
 # @snowplow/signals-node
 
+## 0.0.4
+
+### Patch Changes
+
+- 184ae7e: Adjusting to new online-features API
+- Updated dependencies [184ae7e]
+  - @snowplow/signals-core@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
