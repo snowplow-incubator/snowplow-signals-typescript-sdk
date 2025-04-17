@@ -1,10 +1,10 @@
-import { EntityIdentifiers } from "./EntityIdentifiers";
+import { EntityIdentifiers } from "../models/EntityIdentifiers";
 
-export class GetOnlineFeaturesRequest {
+export class GetOnlineAttributesRequest {
   "entities": EntityIdentifiers;
-  "feature_service"?: string | null;
-  "features"?: Array<string> | null;
-  "full_feature_names"?: boolean;
+  "service"?: string | null;
+  "attributes"?: Array<string> | null;
+  "full_attribute_names"?: boolean;
 
   static readonly discriminator: string | undefined = undefined;
 
@@ -23,27 +23,27 @@ export class GetOnlineFeaturesRequest {
       format: "",
     },
     {
-      name: "feature_service",
-      baseName: "feature_service",
+      name: "service",
+      baseName: "service",
       type: "string",
       format: "",
     },
     {
-      name: "features",
-      baseName: "features",
+      name: "attributes",
+      baseName: "attributes",
       type: "Array<string>",
       format: "",
     },
     {
-      name: "full_feature_names",
-      baseName: "full_feature_names",
+      name: "full_attribute_names",
+      baseName: "full_attribute_names",
       type: "boolean",
       format: "",
     },
   ];
 
   static getAttributeTypeMap() {
-    return GetOnlineFeaturesRequest.attributeTypeMap;
+    return GetOnlineAttributesRequest.attributeTypeMap;
   }
 
   public constructor() {}

@@ -1,5 +1,5 @@
-import { GetOnlineFeaturesRequest } from "./models/GetOnlineFeaturesRequest";
-import { GetOnlineFeaturesResponse } from "./models/GetOnlineFeaturesResponse";
+import { GetOnlineAttributesRequest } from "./models/GetOnlineAttributesRequest";
+import { GetOnlineAttributesResponse } from "./models/GetOnlineAttributesResponse";
 import {
   SignalsCoreOptions,
   SignalsFetchOptions,
@@ -76,11 +76,11 @@ export abstract class SignalsCore {
     options: SignalsFetchOptions
   ): Promise<SignalsFetchResponse>;
 
-  async getOnlineFeatures(
-    body: GetOnlineFeaturesRequest
-  ): Promise<GetOnlineFeaturesResponse> {
+  async getOnlineAttributes(
+    body: GetOnlineAttributesRequest
+  ): Promise<GetOnlineAttributesResponse> {
     return this.fetchResult(
-      `${this.baseUrl}/api/v1/get-online-features`,
+      `${this.baseUrl}/api/v1/get-online-attributes`,
       this._getFetchOptions({ method: "POST", body: JSON.stringify(body) })
     );
   }
