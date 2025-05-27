@@ -1,5 +1,11 @@
 # @snowplow/signals-core
 
+## 0.0.5
+
+### Patch Changes
+
+- af493e2: Update entity identifiers for GetOnlineAttributes
+
 ## 0.0.4
 
 ### Patch Changes
