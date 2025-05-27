@@ -13,7 +13,9 @@ describe("Signals", () => {
 
     await expect(async () => {
       await signals.getOnlineAttributes({
-        entities: { session: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
+        entities: {
+          domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"],
+        },
         service: "session_attributes",
       });
     }).rejects.toThrow("[Signals] Failed to fetch access token");
@@ -28,7 +30,9 @@ describe("Signals", () => {
 
     nock(BASE_URL)
       .post("/api/v1/get-online-attributes", {
-        entities: { session: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
+        entities: {
+          domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"],
+        },
         service: "session_attributes",
       })
       .reply(200, {
@@ -39,7 +43,7 @@ describe("Signals", () => {
 
     const signals = createTestClient();
     const attributes = await signals.getOnlineAttributes({
-      entities: { session: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
+      entities: { domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
       service: "session_attributes",
     });
 
