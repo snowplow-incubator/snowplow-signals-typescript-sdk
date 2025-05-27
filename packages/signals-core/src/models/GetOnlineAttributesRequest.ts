@@ -1,7 +1,5 @@
-import { EntityIdentifiers } from "./EntityIdentifiers";
-
 export class GetOnlineAttributesRequest {
-  "entities": EntityIdentifiers;
+  "entities": { [key: string]: Array<string> };
   "service"?: string | null;
   "attributes"?: Array<string> | null;
   "full_attribute_names"?: boolean;
@@ -19,7 +17,7 @@ export class GetOnlineAttributesRequest {
     {
       name: "entities",
       baseName: "entities",
-      type: "EntityIdentifiers",
+      type: "{ [key: string]: Array<string>; }",
       format: "",
     },
     {
