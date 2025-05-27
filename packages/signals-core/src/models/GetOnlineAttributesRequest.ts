@@ -1,4 +1,4 @@
-import { EntityIdentifiers } from "../models/EntityIdentifiers";
+import { EntityIdentifiers } from "./EntityIdentifiers";
 
 export class GetOnlineAttributesRequest {
   "entities": EntityIdentifiers;

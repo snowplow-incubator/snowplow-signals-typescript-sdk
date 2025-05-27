@@ -2,7 +2,7 @@
   "name": "@snowplow/signals-node",
   "version": "0.0.4",
   "scripts": {
-    "build": "tsup",
+    "build": "tsc && tsup",
     "lint": "tsc",
     "test": "jest"
   },
