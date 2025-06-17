@@ -1,4 +1,5 @@
 import { createTestClient } from "../utils";
+import { cleanAll } from "nock";
 
 describe("Auth", () => {
   test("Should throw on failed auth", async () => {

@@ -1,14 +1,20 @@
 import nock from "nock";
 import { BASE_URL, createTestClient, MOCK_ORG_ID } from "../utils";
 
-nock(
-  `https://console.snowplowanalytics.com/api/msc/v1/organizations/${MOCK_ORG_ID}/credentials/v3/token`
-)
-  .persist()
-  .get("")
-  .reply(200, { accessToken: "test" });
-
 describe("Get attributes", () => {
+  beforeAll(() => {
+    nock(
+      `https://console.snowplowanalytics.com/api/msc/v1/organizations/${MOCK_ORG_ID}/credentials/v3/token`
+    )
+      .persist()
+      .get("")
+      .reply(200, { accessToken: "test" });
+  });
+
+  afterAll(() => {
+    nock.cleanAll();
+  });
+
   test("Should get service attributes", async () => {
     nock(BASE_URL)
       .post("/api/v1/get-online-attributes", {
