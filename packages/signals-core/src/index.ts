@@ -3,4 +3,6 @@ export type {
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
+  GetServiceAttributesRequest,
+  GetViewAttributesRequest,
 } from "./types";

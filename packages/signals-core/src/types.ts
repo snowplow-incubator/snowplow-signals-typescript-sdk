@@ -1,3 +1,20 @@
+// Currently openapi generates Entities type inline on the server models.
+type Entities = { [key: string]: string[] };
+
+export type GetServiceAttributesRequest = {
+  service: string;
+  entities: Entities;
+};
+
+export type GetViewAttributesRequest = {
+  name: string;
+  version: string | number;
+  attributes: string[];
+  entities: Entities;
+};
+
+export type VersionedAttributeName = `${string}_v${string | number}:${string}`;
+
 export type SignalsFetchOptions = {
   method: "GET" | "POST" | "PUT" | "PATCH";
   headers: { [key: string]: string };

@@ -1,11 +1,17 @@
 import { GetOnlineAttributesRequest } from "./models/GetOnlineAttributesRequest";
-import { GetOnlineAttributesResponse } from "./models/GetOnlineAttributesResponse";
+import { GetAttributesResponse } from "./models/GetAttributesResponse";
 import {
+  GetServiceAttributesRequest,
+  GetViewAttributesRequest,
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
 } from "./types";
-import { isJwtExpired, removeTrailingSlash } from "./utils";
+import {
+  formatVersionedViewAttribute,
+  isJwtExpired,
+  removeTrailingSlash,
+} from "./utils";
 
 export abstract class SignalsCore {
   baseUrl: string;
@@ -76,12 +82,37 @@ export abstract class SignalsCore {
     options: SignalsFetchOptions
   ): Promise<SignalsFetchResponse>;
 
-  async getOnlineAttributes(
-    body: GetOnlineAttributesRequest
-  ): Promise<GetOnlineAttributesResponse> {
+  async getServiceAttributes(
+    serviceAttributes: GetServiceAttributesRequest
+  ): Promise<GetAttributesResponse> {
+    return await this._getOnlineAttributes(serviceAttributes);
+  }
+
+  async getViewAttributes(
+    viewAttributes: GetViewAttributesRequest
+  ): Promise<GetAttributesResponse> {
+    const versionedAttributes = viewAttributes.attributes.map((attribute) =>
+      formatVersionedViewAttribute({
+        viewName: viewAttributes.name,
+        viewVersion: viewAttributes.version,
+        attribute,
+      })
+    );
+    return await this._getOnlineAttributes({
+      attributes: versionedAttributes,
+      entities: viewAttributes.entities,
+    });
+  }
+
+  private async _getOnlineAttributes(
+    getOnlineAttributes: GetOnlineAttributesRequest
+  ): Promise<GetAttributesResponse> {
     return this.fetchResult(
       `${this.baseUrl}/api/v1/get-online-attributes`,
-      this._getFetchOptions({ method: "POST", body: JSON.stringify(body) })
+      this._getFetchOptions({
+        method: "POST",
+        body: JSON.stringify(getOnlineAttributes),
+      })
     );
   }
 

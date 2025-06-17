@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import { VersionedAttributeName } from "./types";
 
 export function removeTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
@@ -11,4 +12,16 @@ export function isJwtExpired(token: string): boolean {
     throw new Error("Token invalid: no expiry date");
   }
   return currentTime >= decodedToken.exp;
+}
+
+export function formatVersionedViewAttribute({
+  viewName,
+  viewVersion,
+  attribute,
+}: {
+  viewName: string;
+  viewVersion: string | number;
+  attribute: string;
+}): VersionedAttributeName {
+  return `${viewName}_v${viewVersion}:${attribute}`;
 }
