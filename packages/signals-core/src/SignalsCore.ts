@@ -82,15 +82,11 @@ export abstract class SignalsCore {
     options: SignalsFetchOptions
   ): Promise<SignalsFetchResponse>;
 
-  async getServiceAttributes(
-    serviceAttributes: GetServiceAttributesRequest
-  ): Promise<GetAttributesResponse> {
+  async getServiceAttributes(serviceAttributes: GetServiceAttributesRequest) {
     return await this._getOnlineAttributes(serviceAttributes);
   }
 
-  async getViewAttributes(
-    viewAttributes: GetViewAttributesRequest
-  ): Promise<GetAttributesResponse> {
+  async getViewAttributes(viewAttributes: GetViewAttributesRequest) {
     const versionedAttributes = viewAttributes.attributes.map((attribute) =>
       formatVersionedViewAttribute({
         viewName: viewAttributes.name,

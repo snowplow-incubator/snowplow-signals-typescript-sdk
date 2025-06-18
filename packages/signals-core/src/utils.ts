@@ -20,7 +20,7 @@ export function formatVersionedViewAttribute({
   attribute,
 }: {
   viewName: string;
-  viewVersion: string | number;
+  viewVersion: number;
   attribute: string;
 }): VersionedAttributeName {
   return `${viewName}_v${viewVersion}:${attribute}`;

@@ -69,7 +69,7 @@ describe("Get attributes", () => {
         "min_cart_value",
       ],
       name: "ecommerce",
-      version: "1",
+      version: 1,
     });
 
     expect(attributes).toEqual({

@@ -8,12 +8,12 @@ export type GetServiceAttributesRequest = {
 
 export type GetViewAttributesRequest = {
   name: string;
-  version: string | number;
+  version: number;
   attributes: string[];
   entities: Entities;
 };
 
-export type VersionedAttributeName = `${string}_v${string | number}:${string}`;
+export type VersionedAttributeName = `${string}_v${number}:${string}`;
 
 export type SignalsFetchOptions = {
   method: "GET" | "POST" | "PUT" | "PATCH";
