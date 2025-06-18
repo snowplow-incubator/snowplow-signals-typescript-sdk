@@ -8,7 +8,8 @@ import {
   SignalsFetchResponse,
 } from "./types";
 import {
-  formatVersionedViewAttribute,
+  formatVersionedViewAttributes,
+  getOnlineAttributesApiEntity,
   isJwtExpired,
   removeTrailingSlash,
 } from "./utils";
@@ -83,20 +84,21 @@ export abstract class SignalsCore {
   ): Promise<SignalsFetchResponse>;
 
   async getServiceAttributes(serviceAttributes: GetServiceAttributesRequest) {
-    return await this._getOnlineAttributes(serviceAttributes);
+    return await this._getOnlineAttributes({
+      service: serviceAttributes.name,
+      entities: getOnlineAttributesApiEntity(serviceAttributes),
+    });
   }
 
   async getViewAttributes(viewAttributes: GetViewAttributesRequest) {
-    const versionedAttributes = viewAttributes.attributes.map((attribute) =>
-      formatVersionedViewAttribute({
-        viewName: viewAttributes.name,
-        viewVersion: viewAttributes.version,
-        attribute,
-      })
-    );
+    const versionedAttributes = formatVersionedViewAttributes({
+      attributes: viewAttributes.attributes,
+      viewName: viewAttributes.name,
+      viewVersion: viewAttributes.version,
+    });
     return await this._getOnlineAttributes({
       attributes: versionedAttributes,
-      entities: viewAttributes.entities,
+      entities: getOnlineAttributesApiEntity(viewAttributes),
     });
   }
 

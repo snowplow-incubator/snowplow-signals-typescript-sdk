@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { VersionedAttributeName } from "./types";
+import { IdentifierSpecification, VersionedAttributeName } from "./types";
 
 export function removeTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
@@ -14,14 +14,26 @@ export function isJwtExpired(token: string): boolean {
   return currentTime >= decodedToken.exp;
 }
 
-export function formatVersionedViewAttribute({
+export function formatVersionedViewAttributes({
+  attributes,
   viewName,
   viewVersion,
-  attribute,
 }: {
+  attributes: string[];
   viewName: string;
   viewVersion: number;
-  attribute: string;
-}): VersionedAttributeName {
-  return `${viewName}_v${viewVersion}:${attribute}`;
+}): VersionedAttributeName[] {
+  return attributes.map(
+    (attribute): VersionedAttributeName =>
+      `${viewName}_v${viewVersion}:${attribute}`
+  );
+}
+
+export function getOnlineAttributesApiEntity({
+  entity,
+  identifier,
+}: IdentifierSpecification) {
+  return {
+    [entity]: [identifier],
+  };
 }

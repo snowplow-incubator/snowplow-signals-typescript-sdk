@@ -1,16 +1,25 @@
-// Currently openapi generates Entities type inline on the server models.
-type Entities = { [key: string]: string[] };
+type NonEmptyArray<T> = [T, ...T[]];
 
-export type GetServiceAttributesRequest = {
-  service: string;
-  entities: Entities;
+export enum SnowplowIdentifiers {
+  USER_ID = "user_id",
+  DOMAIN_SESSION_ID = "domain_sessionid",
+  DOMAIN_USER_ID = "domain_userid",
+  NETWORK_USER_ID = "network_userid",
+}
+
+export type IdentifierSpecification = {
+  entity: string;
+  identifier: string | SnowplowIdentifiers;
 };
 
-export type GetViewAttributesRequest = {
+export type GetServiceAttributesRequest = IdentifierSpecification & {
+  name: string;
+};
+
+export type GetViewAttributesRequest = IdentifierSpecification & {
   name: string;
   version: number;
-  attributes: string[];
-  entities: Entities;
+  attributes: NonEmptyArray<string>;
 };
 
 export type VersionedAttributeName = `${string}_v${number}:${string}`;

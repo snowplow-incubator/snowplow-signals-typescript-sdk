@@ -31,8 +31,9 @@ describe("Get attributes", () => {
 
     const signals = createTestClient();
     const attributes = await signals.getServiceAttributes({
-      entities: { domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
-      service: "session_attributes",
+      entity: "domain_sessionid",
+      identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
+      name: "session_attributes",
     });
 
     expect(attributes).toEqual({
@@ -62,7 +63,8 @@ describe("Get attributes", () => {
 
     const signals = createTestClient();
     const attributes = await signals.getViewAttributes({
-      entities: { domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
+      entity: "domain_sessionid",
+      identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
       attributes: [
         "unique_product_names",
         "add_to_cart_events_count",

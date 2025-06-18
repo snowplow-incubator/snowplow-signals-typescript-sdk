@@ -5,4 +5,5 @@ export type {
   SignalsFetchResponse,
   GetServiceAttributesRequest,
   GetViewAttributesRequest,
+  SnowplowIdentifiers,
 } from "./types";
