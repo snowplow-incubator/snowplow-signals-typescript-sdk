@@ -8,6 +8,7 @@ import {
   SignalsFetchResponse,
 } from "./types";
 import {
+  formatGetAttributesResponse,
   formatVersionedViewAttributes,
   getOnlineAttributesApiEntity,
   isJwtExpired,
@@ -104,14 +105,15 @@ export abstract class SignalsCore {
 
   private async _getOnlineAttributes(
     getOnlineAttributes: GetOnlineAttributesRequest
-  ): Promise<GetAttributesResponse> {
-    return this.fetchResult(
+  ): Promise<Record<string, unknown>> {
+    const result = await this.fetchResult<GetAttributesResponse>(
       `${this.baseUrl}/api/v1/get-online-attributes`,
       this._getFetchOptions({
         method: "POST",
         body: JSON.stringify(getOnlineAttributes),
       })
     );
+    return formatGetAttributesResponse(result);
   }
 
   private async _checkToken(token: string | undefined): Promise<string> {

@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { IdentifierSpecification, VersionedAttributeName } from "./types";
+import { GetAttributesResponse } from "./models/GetAttributesResponse";
 
 export function removeTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
@@ -27,6 +28,21 @@ export function formatVersionedViewAttributes({
     (attribute): VersionedAttributeName =>
       `${viewName}_v${viewVersion}:${attribute}`
   );
+}
+
+export function formatGetAttributesResponse(
+  response: GetAttributesResponse
+): Record<string, unknown> {
+  const result: Record<string, any> = {};
+  for (const key in response) {
+    const value = response[key];
+    if (Array.isArray(value)) {
+      result[key] = value[0];
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
 }
 
 export function getOnlineAttributesApiEntity({
