@@ -1,6 +1,7 @@
 import {
   formatVersionedViewAttributes,
   getOnlineAttributesApiEntity,
+  formatGetAttributesResponse,
 } from "../src/utils";
 
 describe("core utils", () => {
@@ -23,6 +24,22 @@ describe("core utils", () => {
     });
     expect(result).toEqual({
       domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"],
+    });
+  });
+
+  test("formatGetAttributesResponse", () => {
+    const response = {
+      unique_product_names: [["Foo", "Bar"]],
+      add_to_cart_events_count: [1],
+      min_cart_value: [10.4],
+      brands_viewed: [[]],
+    };
+    const result = formatGetAttributesResponse(response);
+    expect(result).toEqual({
+      unique_product_names: ["Foo", "Bar"],
+      add_to_cart_events_count: 1,
+      min_cart_value: 10.4,
+      brands_viewed: [],
     });
   });
 });

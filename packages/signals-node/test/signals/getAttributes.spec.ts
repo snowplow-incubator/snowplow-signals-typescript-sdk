@@ -37,9 +37,9 @@ describe("Get attributes", () => {
     });
 
     expect(attributes).toEqual({
-      unique_product_names: [["Foo", "Bar"]],
-      add_to_cart_events_count: [1],
-      min_cart_value: [10.4],
+      unique_product_names: ["Foo", "Bar"],
+      add_to_cart_events_count: 1,
+      min_cart_value: 10.4,
     });
   });
 
@@ -75,9 +75,9 @@ describe("Get attributes", () => {
     });
 
     expect(attributes).toEqual({
-      unique_product_names: [["Foo", "Bar"]],
-      add_to_cart_events_count: [1],
-      min_cart_value: [10.4],
+      unique_product_names: ["Foo", "Bar"],
+      add_to_cart_events_count: 1,
+      min_cart_value: 10.4,
     });
   });
 });

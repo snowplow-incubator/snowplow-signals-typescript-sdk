@@ -1,4 +1,4 @@
 export type GetAttributesResponse = Record<
   string,
-  string[] | string[][] | null
+  (string | number)[] | string[][] | null
 >;
