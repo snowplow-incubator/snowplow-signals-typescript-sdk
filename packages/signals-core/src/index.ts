@@ -3,4 +3,7 @@ export type {
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
+  GetServiceAttributesRequest,
+  GetViewAttributesRequest,
+  SnowplowIdentifiers,
 } from "./types";

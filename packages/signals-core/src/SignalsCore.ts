@@ -1,11 +1,19 @@
 import { GetOnlineAttributesRequest } from "./models/GetOnlineAttributesRequest";
-import { GetOnlineAttributesResponse } from "./models/GetOnlineAttributesResponse";
+import { GetAttributesResponse } from "./models/GetAttributesResponse";
 import {
+  GetServiceAttributesRequest,
+  GetViewAttributesRequest,
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
 } from "./types";
-import { isJwtExpired, removeTrailingSlash } from "./utils";
+import {
+  formatGetAttributesResponse,
+  formatVersionedViewAttributes,
+  getOnlineAttributesApiEntity,
+  isJwtExpired,
+  removeTrailingSlash,
+} from "./utils";
 
 export abstract class SignalsCore {
   baseUrl: string;
@@ -76,13 +84,36 @@ export abstract class SignalsCore {
     options: SignalsFetchOptions
   ): Promise<SignalsFetchResponse>;
 
-  async getOnlineAttributes(
-    body: GetOnlineAttributesRequest
-  ): Promise<GetOnlineAttributesResponse> {
-    return this.fetchResult(
+  async getServiceAttributes(serviceAttributes: GetServiceAttributesRequest) {
+    return await this._getOnlineAttributes({
+      service: serviceAttributes.name,
+      entities: getOnlineAttributesApiEntity(serviceAttributes),
+    });
+  }
+
+  async getViewAttributes(viewAttributes: GetViewAttributesRequest) {
+    const versionedAttributes = formatVersionedViewAttributes({
+      attributes: viewAttributes.attributes,
+      viewName: viewAttributes.name,
+      viewVersion: viewAttributes.version,
+    });
+    return await this._getOnlineAttributes({
+      attributes: versionedAttributes,
+      entities: getOnlineAttributesApiEntity(viewAttributes),
+    });
+  }
+
+  private async _getOnlineAttributes(
+    getOnlineAttributes: GetOnlineAttributesRequest
+  ): Promise<Record<string, unknown>> {
+    const result = await this.fetchResult<GetAttributesResponse>(
       `${this.baseUrl}/api/v1/get-online-attributes`,
-      this._getFetchOptions({ method: "POST", body: JSON.stringify(body) })
+      this._getFetchOptions({
+        method: "POST",
+        body: JSON.stringify(getOnlineAttributes),
+      })
     );
+    return formatGetAttributesResponse(result);
   }
 
   private async _checkToken(token: string | undefined): Promise<string> {

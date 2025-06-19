@@ -1,4 +1,6 @@
 import { jwtDecode } from "jwt-decode";
+import { IdentifierSpecification, VersionedAttributeName } from "./types";
+import { GetAttributesResponse } from "./models/GetAttributesResponse";
 
 export function removeTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
@@ -11,4 +13,43 @@ export function isJwtExpired(token: string): boolean {
     throw new Error("Token invalid: no expiry date");
   }
   return currentTime >= decodedToken.exp;
+}
+
+export function formatVersionedViewAttributes({
+  attributes,
+  viewName,
+  viewVersion,
+}: {
+  attributes: string[];
+  viewName: string;
+  viewVersion: number;
+}): VersionedAttributeName[] {
+  return attributes.map(
+    (attribute): VersionedAttributeName =>
+      `${viewName}_v${viewVersion}:${attribute}`
+  );
+}
+
+export function formatGetAttributesResponse(
+  response: GetAttributesResponse
+): Record<string, unknown> {
+  const result: Record<string, any> = {};
+  for (const key in response) {
+    const value = response[key];
+    if (Array.isArray(value)) {
+      result[key] = value[0];
+    } else {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
+export function getOnlineAttributesApiEntity({
+  entity,
+  identifier,
+}: IdentifierSpecification) {
+  return {
+    [entity]: [identifier],
+  };
 }
