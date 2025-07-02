@@ -1,5 +1,15 @@
 # @snowplow/signals-node
 
+## 0.0.6
+
+### Patch Changes
+
+- fd1b113: Allow any custom entity identifiers to be used to fetch online attributes
+- 31c13c8: Removed `getOnlineAttributes` and replaced with `getViewAttributes` and `getServiceAttributes`
+- Updated dependencies [fd1b113]
+- Updated dependencies [31c13c8]
+  - @snowplow/signals-core@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes
