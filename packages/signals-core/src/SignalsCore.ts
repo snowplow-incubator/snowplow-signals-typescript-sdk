@@ -1,6 +1,7 @@
 import { GetOnlineAttributesRequest } from "./models/GetOnlineAttributesRequest";
 import { GetAttributesResponse } from "./models/GetAttributesResponse";
 import {
+  GetBatchServiceAttributesRequest,
   GetServiceAttributesRequest,
   GetViewAttributesRequest,
   SignalsCoreOptions,
@@ -9,6 +10,7 @@ import {
 } from "./types";
 import {
   formatGetAttributesResponse,
+  formatGetBatchAttributesResponse,
   formatVersionedViewAttributes,
   getOnlineAttributesApiEntity,
   isJwtExpired,
@@ -91,6 +93,17 @@ export abstract class SignalsCore {
     });
   }
 
+  async getBatchServiceAttributes(
+    serviceAttributes: GetBatchServiceAttributesRequest
+  ) {
+    return await this._getOnlineBatchAttributes({
+      service: serviceAttributes.name,
+      entities: {
+        [serviceAttributes.entity]: serviceAttributes.identifiers,
+      },
+    });
+  }
+
   async getViewAttributes(viewAttributes: GetViewAttributesRequest) {
     const versionedAttributes = formatVersionedViewAttributes({
       attributes: viewAttributes.attributes,
@@ -103,9 +116,9 @@ export abstract class SignalsCore {
     });
   }
 
-  private async _getOnlineAttributes(
+  private async _getOnlineAttributesRequest(
     getOnlineAttributes: GetOnlineAttributesRequest
-  ): Promise<Record<string, unknown>> {
+  ): Promise<GetAttributesResponse> {
     const result = await this.fetchResult<GetAttributesResponse>(
       `${this.baseUrl}/api/v1/get-online-attributes`,
       this._getFetchOptions({
@@ -113,7 +126,21 @@ export abstract class SignalsCore {
         body: JSON.stringify(getOnlineAttributes),
       })
     );
+    return result;
+  }
+
+  private async _getOnlineAttributes(
+    getOnlineAttributes: GetOnlineAttributesRequest
+  ): Promise<Record<string, unknown>> {
+    const result = await this._getOnlineAttributesRequest(getOnlineAttributes);
     return formatGetAttributesResponse(result);
+  }
+
+  private async _getOnlineBatchAttributes(
+    getOnlineAttributes: GetOnlineAttributesRequest
+  ): Promise<Record<string, unknown[]>> {
+    const result = await this._getOnlineAttributesRequest(getOnlineAttributes);
+    return formatGetBatchAttributesResponse(result);
   }
 
   private async _checkToken(token: string | undefined): Promise<string> {

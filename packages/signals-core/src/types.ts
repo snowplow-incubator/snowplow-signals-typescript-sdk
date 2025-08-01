@@ -1,6 +1,6 @@
 type NonEmptyArray<T> = [T, ...T[]];
 
-export enum SnowplowIdentifiers {
+export enum SnowplowStandardEntities {
   USER_ID = "user_id",
   DOMAIN_SESSION_ID = "domain_sessionid",
   DOMAIN_USER_ID = "domain_userid",
@@ -8,8 +8,8 @@ export enum SnowplowIdentifiers {
 }
 
 export type IdentifierSpecification = {
-  entity: string;
-  identifier: string | SnowplowIdentifiers;
+  entity: string | SnowplowStandardEntities;
+  identifier: string;
 };
 
 export type GetServiceAttributesRequest = IdentifierSpecification & {
@@ -20,6 +20,12 @@ export type GetViewAttributesRequest = IdentifierSpecification & {
   name: string;
   version: number;
   attributes: NonEmptyArray<string>;
+};
+
+export type GetBatchServiceAttributesRequest = {
+  identifiers: NonEmptyArray<string>;
+  name: string;
+  entity: string | SnowplowStandardEntities;
 };
 
 export type VersionedAttributeName = `${string}_v${number}:${string}`;

@@ -33,7 +33,7 @@ export function formatVersionedViewAttributes({
 export function formatGetAttributesResponse(
   response: GetAttributesResponse
 ): Record<string, unknown> {
-  const result: Record<string, any> = {};
+  const result: Record<string, unknown> = {};
   for (const key in response) {
     const value = response[key];
     if (Array.isArray(value)) {
@@ -41,6 +41,24 @@ export function formatGetAttributesResponse(
     } else {
       result[key] = value;
     }
+  }
+  return result;
+}
+
+export function formatGetBatchAttributesResponse(
+  response: GetAttributesResponse
+): Record<string, unknown[]> {
+  const result: Record<string, unknown[]> = {};
+  for (const key in response) {
+    const value = response[key];
+    result[key] = Array.isArray(value)
+      ? value.map((v) => {
+          if (Array.isArray(v)) {
+            return v.length > 1 ? v : v[0];
+          }
+          return v;
+        })
+      : [value];
   }
   return result;
 }

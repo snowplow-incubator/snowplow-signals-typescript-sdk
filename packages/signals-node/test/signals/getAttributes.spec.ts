@@ -80,4 +80,38 @@ describe("Get attributes", () => {
       min_cart_value: 10.4,
     });
   });
+
+  test("Should get batch service attributes", async () => {
+    nock(BASE_URL)
+      .post("/api/v1/get-online-attributes", {
+        entities: {
+          domain_sessionid: [
+            "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
+            "b24d3aaa-160e-40de-a569-1580fb3ad6d8",
+          ],
+        },
+        service: "session_attributes",
+      })
+      .reply(200, {
+        unique_product_names: [["Foo", "Bar"], ["Baz"]],
+        add_to_cart_events_count: [1, null],
+        min_cart_value: [10.4, 20.5],
+      });
+
+    const signals = createTestClient();
+    const attributes = await signals.getBatchServiceAttributes({
+      entity: "domain_sessionid",
+      identifiers: [
+        "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
+        "b24d3aaa-160e-40de-a569-1580fb3ad6d8",
+      ],
+      name: "session_attributes",
+    });
+
+    expect(attributes).toEqual({
+      unique_product_names: [["Foo", "Bar"], "Baz"],
+      add_to_cart_events_count: [1, null],
+      min_cart_value: [10.4, 20.5],
+    });
+  });
 });
