@@ -114,4 +114,45 @@ describe("Get attributes", () => {
       min_cart_value: [10.4, 20.5],
     });
   });
+  test("Should throw proper error message", async () => {
+    nock(BASE_URL)
+      .post("/api/v1/get-online-attributes", {
+        entities: {
+          domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"],
+        },
+        attributes: [
+          "ecommerce_v1:unique_product_names",
+          "ecommerce_v1:add_to_cart_events_count",
+          "ecommerce_v1:min_cart_value",
+        ],
+      })
+      .reply(422, {
+        detail: {
+          missing: "some attribute",
+        },
+      });
+
+    const signals = createTestClient();
+    await expect(
+      signals.getViewAttributes({
+        entity: "domain_sessionid",
+        identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
+        attributes: [
+          "unique_product_names",
+          "add_to_cart_events_count",
+          "min_cart_value",
+        ],
+        name: "ecommerce",
+        version: 1,
+      })
+    ).rejects.toThrow(
+      new Error(
+        `[Signals] API error: 422 Request failed with status code 422 ${JSON.stringify(
+          { detail: { missing: "some attribute" } },
+          null,
+          2
+        )}`
+      )
+    );
+  });
 });
