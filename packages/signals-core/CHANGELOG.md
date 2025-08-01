@@ -1,5 +1,15 @@
 # @snowplow/signals-core
 
+## 0.1.0
+
+### Minor Changes
+
+- e58487f: Add getBatchServiceAttributes method
+
+### Patch Changes
+
+- 13be84c: Add proper error message on API exceptions
+
 ## 0.0.6
 
 ### Patch Changes
