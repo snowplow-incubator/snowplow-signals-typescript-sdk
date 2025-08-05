@@ -1,5 +1,13 @@
 # @snowplow/signals-node
 
+## 0.1.1
+
+### Patch Changes
+
+- ba98a89: Fix MJS import syntax error from unused typings
+- Updated dependencies [ba98a89]
+  - @snowplow/signals-core@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
