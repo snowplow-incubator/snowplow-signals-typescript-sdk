@@ -3,7 +3,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "isolatedModules": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true
   },
   "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules"]

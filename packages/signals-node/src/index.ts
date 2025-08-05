@@ -1,5 +1,5 @@
 export { Signals } from "./Signals";
-export {
+export type {
   GetServiceAttributesRequest,
   GetViewAttributesRequest,
   SnowplowStandardEntities,
