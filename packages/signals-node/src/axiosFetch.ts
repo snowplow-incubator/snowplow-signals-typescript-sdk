@@ -1,5 +1,5 @@
 import axios from "axios";
-import {
+import type {
   SignalsFetchOptions,
   SignalsFetchResponse,
 } from "@snowplow/signals-core";

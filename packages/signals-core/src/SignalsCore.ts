@@ -1,6 +1,6 @@
 import { GetOnlineAttributesRequest } from "./models/GetOnlineAttributesRequest";
-import { GetAttributesResponse } from "./models/GetAttributesResponse";
-import {
+import type { GetAttributesResponse } from "./models/GetAttributesResponse";
+import type {
   GetBatchServiceAttributesRequest,
   GetServiceAttributesRequest,
   GetViewAttributesRequest,

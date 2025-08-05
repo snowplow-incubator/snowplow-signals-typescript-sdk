@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
-import { IdentifierSpecification, VersionedAttributeName } from "./types";
-import { GetAttributesResponse } from "./models/GetAttributesResponse";
+import type { IdentifierSpecification, VersionedAttributeName } from "./types";
+import type { GetAttributesResponse } from "./models/GetAttributesResponse";
 
 export function removeTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");

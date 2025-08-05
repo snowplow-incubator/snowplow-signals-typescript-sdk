@@ -2,7 +2,7 @@
 module.exports = {
   testEnvironment: "node",
   transform: {
-    "^.+.tsx?$": ["ts-jest", {}],
+    "^.+.tsx?$": ["ts-jest", { useESM: true, isolatedModules: true }],
   },
   setupFilesAfterEnv: ["<rootDir>/test/setupTests.ts"],
   moduleNameMapper: {
