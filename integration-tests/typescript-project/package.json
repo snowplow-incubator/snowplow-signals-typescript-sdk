@@ -1,0 +1,17 @@
+{
+    "name": "signals-typescript-test",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc",
+        "test": "npm run build && node dist/test.js"
+    },
+    "dependencies": {
+        "@snowplow/signals-node": "file:../../packages/signals-node",
+        "@snowplow/signals-core": "file:../../packages/signals-core"
+    },
+    "devDependencies": {
+        "@types/node": "^22.13.10",
+        "typescript": "^5.8.2"
+    }
+}
