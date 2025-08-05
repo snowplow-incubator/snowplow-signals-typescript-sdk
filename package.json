@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run test --workspaces --if-present",
+    "test:integration": "cd integration-tests && npm run test",
     "prepare": "npm run build --workspaces",
     "build": "npm run clean:all && npm run build --workspaces",
     "changeset": "changeset",

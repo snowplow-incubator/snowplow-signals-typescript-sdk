@@ -1,0 +1,13 @@
+{
+    "name": "signals-cjs-test",
+    "version": "0.1.0",
+    "type": "commonjs",
+    "private": true,
+    "scripts": {
+        "test": "node test.js"
+    },
+    "dependencies": {
+        "@snowplow/signals-node": "file:../../packages/signals-node",
+        "@snowplow/signals-core": "file:../../packages/signals-core"
+    }
+}

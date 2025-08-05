@@ -1,0 +1,17 @@
+{
+    "name": "signals-integration-tests",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "test": "node run-tests.js",
+        "test:esm": "cd esm-project && npm install && npm run test",
+        "test:cjs": "cd cjs-project && npm install && npm run test",
+        "test:typescript": "cd typescript-project && npm install && npm run test",
+        "clean": "rm -rf */node_modules */dist */.tsbuildinfo",
+        "setup": "npm run clean && npm run test"
+    },
+    "description": "Integration tests for @snowplow/signals-node across different module systems",
+    "overrides": {
+        "@snowplow/signals-core": "file:../packages/signals-core"
+    }
+}
