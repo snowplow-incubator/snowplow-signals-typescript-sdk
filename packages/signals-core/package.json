@@ -2,6 +2,7 @@
   "name": "@snowplow/signals-core",
   "version": "0.1.1",
   "scripts": {
+    "prebuild": "node scripts/update-version.js",
     "build": "tsc && tsup",
     "lint": "tsc",
     "test": "jest"
