@@ -16,7 +16,9 @@ import {
   isJwtExpired,
   removeTrailingSlash,
 } from "./utils";
+import { version } from "./version";
 
+const X_SIGNALS_SDK_NAME = `signals-ts ${version}`;
 export abstract class SignalsCore {
   baseUrl: string;
   organizationId: string;
@@ -55,7 +57,7 @@ export abstract class SignalsCore {
         headers: {
           "X-API-Key-Id": this.apiKeyId,
           "X-API-Key": this.apiKey,
-          "X-Signals-Sdk-Name": "signals-ts",
+          "X-Signals-Sdk-Name": X_SIGNALS_SDK_NAME,
         },
       });
       const responseJson = await response.json();
@@ -73,7 +75,7 @@ export abstract class SignalsCore {
       method: options.method,
       headers: {
         "Content-Type": "application/json",
-        "X-Signals-Sdk-Name": "signals-ts",
+        "X-Signals-Sdk-Name": X_SIGNALS_SDK_NAME,
       },
       body: options.body,
     };
