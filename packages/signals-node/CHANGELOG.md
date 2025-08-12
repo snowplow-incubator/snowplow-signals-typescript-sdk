@@ -1,5 +1,13 @@
 # @snowplow/signals-node
 
+## 0.1.2
+
+### Patch Changes
+
+- 71001ad: Add SDK version on header
+- Updated dependencies [71001ad]
+  - @snowplow/signals-core@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
