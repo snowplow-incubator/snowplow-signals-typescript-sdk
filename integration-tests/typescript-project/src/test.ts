@@ -30,7 +30,7 @@ try {
   process.exit(1);
 }
 
-// Test 3: Instance creation with typed parameters
+// Test 3: Instance creation with BDP authentication
 try {
   const signals = new Signals({
     baseUrl: "https://example.com",
@@ -38,13 +38,26 @@ try {
     apiKeyId: "test-key-id",
     organizationId: "test-org",
   });
-  console.log("✅ Typed instance creation successful");
+  console.log("✅ BDP instance creation successful");
 } catch (error) {
-  console.error("❌ Typed instance creation failed:", (error as Error).message);
+  console.error("❌ BDP instance creation failed:", (error as Error).message);
   process.exit(1);
 }
 
-// Test 4: Method existence and typing
+// Test 4: Instance creation with TRIAL authentication
+try {
+  const trialSignals = new Signals({
+    baseUrl: "https://example.com",
+    authMode: 'trial',
+    trialToken: 'test-trial-token',
+  });
+  console.log("✅ TRIAL instance creation successful");
+} catch (error) {
+  console.error("❌ TRIAL instance creation failed:", (error as Error).message);
+  process.exit(1);
+}
+
+// Test 5: Method existence and typing
 try {
   const signals = new Signals({
     baseUrl: "https://httpbin.org/status/200",

@@ -8,12 +8,7 @@ import type {
 
 export class Signals extends SignalsCore {
   constructor(params: SignalsCoreOptions) {
-    super({
-      baseUrl: params.baseUrl,
-      apiKey: params.apiKey,
-      apiKeyId: params.apiKeyId,
-      organizationId: params.organizationId,
-    });
+    super(params);
   }
 
   fetch(

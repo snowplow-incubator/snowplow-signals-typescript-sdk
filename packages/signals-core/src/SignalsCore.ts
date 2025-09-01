@@ -21,32 +21,49 @@ import { version } from "./version";
 const X_SIGNALS_SDK_NAME = `signals-ts ${version}`;
 export abstract class SignalsCore {
   baseUrl: string;
-  organizationId: string;
-  apiKeyId: string;
-  apiKey: string;
+  authMode: 'bdp' | 'trial';
+  organizationId?: string;
+  apiKeyId?: string;
+  apiKey?: string;
+  trialToken?: string;
   private accessToken: string | undefined = undefined;
 
   constructor(params: SignalsCoreOptions) {
+    // Validate required parameters first
+    if (!params.baseUrl) {
+      throw new Error('[Signals] baseUrl required for instantiation');
+    }
+
     this.baseUrl = removeTrailingSlash(params.baseUrl);
+    this.authMode = params.authMode || 'bdp';
     this.organizationId = params.organizationId;
     this.apiKeyId = params.apiKeyId;
     this.apiKey = params.apiKey;
+    this.trialToken = params.trialToken;
 
-    const requiredParams = [
-      "baseUrl",
-      "apiKey",
-      "apiKeyId",
-      "organizationId",
-    ] as const;
-    const missingParams = requiredParams.filter((param) => !this[param]);
-    if (missingParams.length > 0) {
-      throw new Error(
-        `[Signals] ${missingParams.join(", ")} required for instantiation`
-      );
+    if (this.authMode === 'trial') {
+      if (!this.trialToken) {
+        throw new Error('[Signals] trialToken required when authMode is "trial"');
+      }
+    } else {
+      // BDP mode validation
+      const requiredBdpParams = ['apiKey', 'apiKeyId', 'organizationId'] as const;
+      const missingBdpParams = requiredBdpParams.filter((param) => !this[param]);
+      if (missingBdpParams.length > 0) {
+        throw new Error(
+          `[Signals] ${missingBdpParams.join(', ')} required for BDP authentication mode`
+        );
+      }
     }
   }
 
   protected async _fetchToken(): Promise<string> {
+    if (this.authMode === 'trial') {
+      // For trial mode, we use the trial token directly
+      return this.trialToken!;
+    }
+
+    // BDP token fetching logic
     const accessTokenUrl = process.env.BDP_NEXT
       ? `https://next.console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`
       : `https://console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`;
@@ -55,8 +72,8 @@ export abstract class SignalsCore {
       const response = await this.fetch(accessTokenUrl, {
         method: "GET",
         headers: {
-          "X-API-Key-Id": this.apiKeyId,
-          "X-API-Key": this.apiKey,
+          "X-API-Key-Id": this.apiKeyId!,
+          "X-API-Key": this.apiKey!,
           "X-Signals-Sdk-Name": X_SIGNALS_SDK_NAME,
         },
       });
@@ -146,6 +163,12 @@ export abstract class SignalsCore {
   }
 
   private async _checkToken(token: string | undefined): Promise<string> {
+    if (this.authMode === 'trial') {
+      // Trial tokens don't expire, always return the trial token
+      return this.trialToken!;
+    }
+
+    // BDP token management with expiration checking
     if (token === undefined) {
       return await this._fetchToken();
     } else if (isJwtExpired(token)) {
