@@ -39,14 +39,14 @@ try {
     throw new Error("getServiceAttributes method not found");
   }
 
-  if (typeof signals.getViewAttributes !== "function") {
-    throw new Error("getViewAttributes method not found");
+  if (typeof signals.getGroupAttributes !== "function") {
+    throw new Error("getGroupAttributes method not found");
   }
 
   console.log("✅ Method existence check passed");
   console.log("Methods available:", {
     getServiceAttributes: typeof signals.getServiceAttributes,
-    getViewAttributes: typeof signals.getViewAttributes,
+    getGroupAttributes: typeof signals.getGroupAttributes,
   });
 } catch (error) {
   console.error("❌ Method existence check failed:", error.message);

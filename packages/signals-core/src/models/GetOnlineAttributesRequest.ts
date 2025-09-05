@@ -1,5 +1,5 @@
 export class GetOnlineAttributesRequest {
-  "entities": { [key: string]: Array<string> };
+  "attribute_keys": { [key: string]: Array<string> };
   "service"?: string | null;
   "attributes"?: Array<string> | null;
   "full_attribute_names"?: boolean;
@@ -15,8 +15,8 @@ export class GetOnlineAttributesRequest {
     format: string;
   }> = [
     {
-      name: "entities",
-      baseName: "entities",
+      name: "attribute_keys",
+      baseName: "attribute_keys",
       type: "{ [key: string]: Array<string>; }",
       format: "",
     },

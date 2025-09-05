@@ -1,7 +1,7 @@
 export { Signals } from "./Signals";
 export type {
   GetServiceAttributesRequest,
-  GetViewAttributesRequest,
-  SnowplowStandardEntities,
+  GetGroupAttributesRequest,
+  SnowplowStandardAttributeKeys,
   GetBatchServiceAttributesRequest,
 } from "@snowplow/signals-core";
