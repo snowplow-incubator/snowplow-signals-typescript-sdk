@@ -6,7 +6,7 @@ describe("Auth", () => {
 
     await expect(async () => {
       await signals.getServiceAttributes({
-        entity: "domain_sessionid",
+        attribute_key: "domain_sessionid",
         identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
         name: "session_attributes",
       });

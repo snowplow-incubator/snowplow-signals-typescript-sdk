@@ -3,7 +3,7 @@ import type { GetAttributesResponse } from "./models/GetAttributesResponse";
 import type {
   GetBatchServiceAttributesRequest,
   GetServiceAttributesRequest,
-  GetViewAttributesRequest,
+  GetGroupAttributesRequest,
   SignalsCoreOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
@@ -11,8 +11,8 @@ import type {
 import {
   formatGetAttributesResponse,
   formatGetBatchAttributesResponse,
-  formatVersionedViewAttributes,
-  getOnlineAttributesApiEntity,
+  formatVersionedGroupAttributes,
+  getOnlineAttributesApiAttributeKey,
   isJwtExpired,
   removeTrailingSlash,
 } from "./utils";
@@ -91,7 +91,7 @@ export abstract class SignalsCore {
   async getServiceAttributes(serviceAttributes: GetServiceAttributesRequest) {
     return await this._getOnlineAttributes({
       service: serviceAttributes.name,
-      entities: getOnlineAttributesApiEntity(serviceAttributes),
+      attribute_keys: getOnlineAttributesApiAttributeKey(serviceAttributes),
     });
   }
 
@@ -100,21 +100,21 @@ export abstract class SignalsCore {
   ) {
     return await this._getOnlineBatchAttributes({
       service: serviceAttributes.name,
-      entities: {
-        [serviceAttributes.entity]: serviceAttributes.identifiers,
+      attribute_keys: {
+        [serviceAttributes.attribute_key]: serviceAttributes.identifiers,
       },
     });
   }
 
-  async getViewAttributes(viewAttributes: GetViewAttributesRequest) {
-    const versionedAttributes = formatVersionedViewAttributes({
-      attributes: viewAttributes.attributes,
-      viewName: viewAttributes.name,
-      viewVersion: viewAttributes.version,
+  async getGroupAttributes(groupAttributes: GetGroupAttributesRequest) {
+    const versionedAttributes = formatVersionedGroupAttributes({
+      attributes: groupAttributes.attributes,
+      groupName: groupAttributes.name,
+      groupVersion: groupAttributes.version,
     });
     return await this._getOnlineAttributes({
       attributes: versionedAttributes,
-      entities: getOnlineAttributesApiEntity(viewAttributes),
+      attribute_keys: getOnlineAttributesApiAttributeKey(groupAttributes),
     });
   }
 

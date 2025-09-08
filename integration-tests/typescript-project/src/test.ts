@@ -1,7 +1,6 @@
 import {
   Signals,
   type GetServiceAttributesRequest,
-  type GetViewAttributesRequest,
 } from "@snowplow/signals-node";
 
 console.log("🧪 Testing TypeScript compilation and imports...");
@@ -19,7 +18,7 @@ try {
 try {
   // This should compile without errors
   const requestData: GetServiceAttributesRequest = {
-    entity: "user",
+    attribute_key: "user",
     identifier: "test-id",
     name: "test-service",
   };
@@ -59,14 +58,14 @@ try {
     throw new Error("getServiceAttributes method not found");
   }
 
-  if (typeof signals.getViewAttributes !== "function") {
-    throw new Error("getViewAttributes method not found");
+  if (typeof signals.getGroupAttributes !== "function") {
+    throw new Error("getGroupAttributes method not found");
   }
 
   console.log("✅ Typed method existence check passed");
   console.log("Methods available with proper typing:", {
     getServiceAttributes: typeof signals.getServiceAttributes,
-    getViewAttributes: typeof signals.getViewAttributes,
+    getGroupAttributes: typeof signals.getGroupAttributes,
   });
 } catch (error) {
   console.error("❌ Typed method calls failed:", (error as Error).message);

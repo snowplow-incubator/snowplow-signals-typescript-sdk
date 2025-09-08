@@ -4,7 +4,7 @@ export type {
   SignalsFetchOptions,
   SignalsFetchResponse,
   GetServiceAttributesRequest,
-  GetViewAttributesRequest,
-  SnowplowStandardEntities,
+  GetGroupAttributesRequest,
+  SnowplowStandardAttributeKeys,
   GetBatchServiceAttributesRequest,
 } from "./types";

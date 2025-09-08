@@ -15,18 +15,18 @@ export function isJwtExpired(token: string): boolean {
   return currentTime >= decodedToken.exp;
 }
 
-export function formatVersionedViewAttributes({
+export function formatVersionedGroupAttributes({
   attributes,
-  viewName,
-  viewVersion,
+  groupName,
+  groupVersion,
 }: {
   attributes: string[];
-  viewName: string;
-  viewVersion: number;
+  groupName: string;
+  groupVersion: number;
 }): VersionedAttributeName[] {
   return attributes.map(
     (attribute): VersionedAttributeName =>
-      `${viewName}_v${viewVersion}:${attribute}`
+      `${groupName}_v${groupVersion}:${attribute}`
   );
 }
 
@@ -63,11 +63,11 @@ export function formatGetBatchAttributesResponse(
   return result;
 }
 
-export function getOnlineAttributesApiEntity({
-  entity,
+export function getOnlineAttributesApiAttributeKey({
+  attribute_key,
   identifier,
 }: IdentifierSpecification) {
   return {
-    [entity]: [identifier],
+    [attribute_key]: [identifier],
   };
 }

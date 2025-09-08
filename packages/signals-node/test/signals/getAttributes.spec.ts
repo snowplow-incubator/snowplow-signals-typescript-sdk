@@ -18,7 +18,7 @@ describe("Get attributes", () => {
   test("Should get service attributes", async () => {
     nock(BASE_URL)
       .post("/api/v1/get-online-attributes", {
-        entities: {
+        attribute_keys: {
           domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"],
         },
         service: "session_attributes",
@@ -31,7 +31,7 @@ describe("Get attributes", () => {
 
     const signals = createTestClient();
     const attributes = await signals.getServiceAttributes({
-      entity: "domain_sessionid",
+      attribute_key: "domain_sessionid",
       identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
       name: "session_attributes",
     });
@@ -43,10 +43,10 @@ describe("Get attributes", () => {
     });
   });
 
-  test("Should get view attributes", async () => {
+  test("Should get group attributes", async () => {
     nock(BASE_URL)
       .post("/api/v1/get-online-attributes", {
-        entities: {
+        attribute_keys: {
           domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"],
         },
         attributes: [
@@ -62,8 +62,8 @@ describe("Get attributes", () => {
       });
 
     const signals = createTestClient();
-    const attributes = await signals.getViewAttributes({
-      entity: "domain_sessionid",
+    const attributes = await signals.getGroupAttributes({
+      attribute_key: "domain_sessionid",
       identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
       attributes: [
         "unique_product_names",
@@ -84,7 +84,7 @@ describe("Get attributes", () => {
   test("Should get batch service attributes", async () => {
     nock(BASE_URL)
       .post("/api/v1/get-online-attributes", {
-        entities: {
+        attribute_keys: {
           domain_sessionid: [
             "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
             "b24d3aaa-160e-40de-a569-1580fb3ad6d8",
@@ -100,7 +100,7 @@ describe("Get attributes", () => {
 
     const signals = createTestClient();
     const attributes = await signals.getBatchServiceAttributes({
-      entity: "domain_sessionid",
+      attribute_key: "domain_sessionid",
       identifiers: [
         "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
         "b24d3aaa-160e-40de-a569-1580fb3ad6d8",
@@ -117,7 +117,7 @@ describe("Get attributes", () => {
   test("Should throw proper error message", async () => {
     nock(BASE_URL)
       .post("/api/v1/get-online-attributes", {
-        entities: {
+        attribute_keys: {
           domain_sessionid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"],
         },
         attributes: [
@@ -134,8 +134,8 @@ describe("Get attributes", () => {
 
     const signals = createTestClient();
     await expect(
-      signals.getViewAttributes({
-        entity: "domain_sessionid",
+      signals.getGroupAttributes({
+        attribute_key: "domain_sessionid",
         identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
         attributes: [
           "unique_product_names",

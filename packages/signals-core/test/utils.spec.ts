@@ -1,26 +1,26 @@
 import {
-  formatVersionedViewAttributes,
-  getOnlineAttributesApiEntity,
+  formatVersionedGroupAttributes,
+  getOnlineAttributesApiAttributeKey,
   formatGetAttributesResponse,
   formatGetBatchAttributesResponse,
 } from "../src/utils";
 
 describe("core utils", () => {
-  test("formatVersionedViewAttribute", () => {
-    const result = formatVersionedViewAttributes({
-      viewName: "test_view",
-      viewVersion: 1,
+  test("formatVersionedGroupAttribute", () => {
+    const result = formatVersionedGroupAttributes({
+      groupName: "test_group",
+      groupVersion: 1,
       attributes: ["test_attribute", "test_attribute2"],
     });
     expect(result).toStrictEqual([
-      "test_view_v1:test_attribute",
-      "test_view_v1:test_attribute2",
+      "test_group_v1:test_attribute",
+      "test_group_v1:test_attribute2",
     ]);
   });
 
-  test("getOnlineAttributesApiEntity", () => {
-    const result = getOnlineAttributesApiEntity({
-      entity: "domain_sessionid",
+  test("getOnlineAttributesApiAttributeKey", () => {
+    const result = getOnlineAttributesApiAttributeKey({
+      attribute_key: "domain_sessionid",
       identifier: "e24d3aaa-160e-40de-a569-1580fb3ad6d7",
     });
     expect(result).toEqual({
