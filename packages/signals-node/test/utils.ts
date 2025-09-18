@@ -1,4 +1,4 @@
-import type { SignalsCoreOptions } from "@snowplow/signals-core";
+import type { SignalsCoreOptions, SignalsCoreSandboxOptions } from "@snowplow/signals-core";
 import { Signals } from "../src";
 
 export const BASE_URL = "http://localhost:8000";
@@ -15,10 +15,9 @@ export function createTestClient(options: Partial<SignalsCoreOptions> = {}) {
   return new Signals({ ...defaultOptions, ...options });
 }
 
-export function createSandboxTestClient(options: Partial<SignalsCoreOptions> = {}) {
-  const defaultOptions: SignalsCoreOptions = {
+export function createSandboxTestClient(options: Partial<SignalsCoreSandboxOptions> = {}) {
+  const defaultOptions: SignalsCoreSandboxOptions = {
     baseUrl: BASE_URL,
-    authMode: 'sandbox' as const,
     sandboxToken: MOCK_SANDBOX_TOKEN,
   };
   return new Signals({ ...defaultOptions, ...options });

@@ -48,7 +48,6 @@ try {
 try {
   const sandboxSignals = new Signals({
     baseUrl: "https://example.com",
-    authMode: 'sandbox',
     sandboxToken: 'test-sandbox-token',
   });
   console.log("✅ SANDBOX instance creation successful");

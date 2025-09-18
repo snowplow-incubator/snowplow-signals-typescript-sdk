@@ -5,8 +5,13 @@ import type {
   GetServiceAttributesRequest,
   GetGroupAttributesRequest,
   SignalsCoreOptions,
+  SignalsCoreSandboxOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
+} from "./types";
+import {
+  isBDPAuthOptions,
+  isSandboxAuthOptions,
 } from "./types";
 import {
   formatGetAttributesResponse,
@@ -28,32 +33,29 @@ export abstract class SignalsCore {
   sandboxToken?: string;
   private accessToken: string | undefined = undefined;
 
-  constructor(params: SignalsCoreOptions) {
+  constructor(params: SignalsCoreOptions | SignalsCoreSandboxOptions) {
     // Validate required parameters first
     if (!params.baseUrl) {
       throw new Error('[Signals] baseUrl required for instantiation');
     }
 
     this.baseUrl = removeTrailingSlash(params.baseUrl);
-    this.authMode = params.authMode || 'bdp';
-    this.organizationId = params.organizationId;
-    this.apiKeyId = params.apiKeyId;
-    this.apiKey = params.apiKey;
-    this.sandboxToken = params.sandboxToken;
-
-    if (this.authMode === 'sandbox') {
-      if (!this.sandboxToken) {
-        throw new Error('[Signals] sandboxToken required when authMode is "sandbox"');
-      }
+    
+    // Infer auth mode from the provided options
+    if (isSandboxAuthOptions(params)) {
+      this.authMode = 'sandbox';
+      this.sandboxToken = params.sandboxToken;
+      this.organizationId = undefined;
+      this.apiKeyId = undefined;
+      this.apiKey = undefined;
+    } else if (isBDPAuthOptions(params)) {
+      this.authMode = 'bdp';
+      this.organizationId = params.organizationId;
+      this.apiKeyId = params.apiKeyId;
+      this.apiKey = params.apiKey;
+      this.sandboxToken = undefined;
     } else {
-      // BDP mode validation
-      const requiredBdpParams = ['apiKey', 'apiKeyId', 'organizationId'] as const;
-      const missingBdpParams = requiredBdpParams.filter((param) => !this[param]);
-      if (missingBdpParams.length > 0) {
-        throw new Error(
-          `[Signals] ${missingBdpParams.join(', ')} required for BDP authentication mode`
-        );
-      }
+      throw new Error('[Signals] Invalid authentication options provided. Must provide either sandbox token or BDP credentials (apiKey, apiKeyId, organizationId)');
     }
   }
 
