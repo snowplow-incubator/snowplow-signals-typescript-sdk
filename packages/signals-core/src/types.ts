@@ -44,11 +44,11 @@ export type SignalsFetchResponse<T = any> = {
 
 export type SignalsCoreOptions = {
   baseUrl: string;
-  authMode?: 'bdp' | 'trial';
+  authMode?: 'bdp' | 'sandbox';
   // BDP authentication fields (required when authMode is 'bdp' or undefined)
   apiKey?: string;
   apiKeyId?: string;
   organizationId?: string;
-  // Trial authentication field (required when authMode is 'trial')
-  trialToken?: string;
+  // Sandbox authentication field (required when authMode is 'sandbox')
+  sandboxToken?: string;
 };

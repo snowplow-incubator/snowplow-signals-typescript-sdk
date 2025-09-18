@@ -3,7 +3,7 @@ import { Signals } from "../src";
 
 export const BASE_URL = "http://localhost:8000";
 export const MOCK_ORG_ID = "test-org";
-export const MOCK_TRIAL_TOKEN = "test-trial-token";
+export const MOCK_SANDBOX_TOKEN = "test-sandbox-token";
 
 export function createTestClient(options: Partial<SignalsCoreOptions> = {}) {
   const defaultOptions: SignalsCoreOptions = {
@@ -15,11 +15,11 @@ export function createTestClient(options: Partial<SignalsCoreOptions> = {}) {
   return new Signals({ ...defaultOptions, ...options });
 }
 
-export function createTrialTestClient(options: Partial<SignalsCoreOptions> = {}) {
+export function createSandboxTestClient(options: Partial<SignalsCoreOptions> = {}) {
   const defaultOptions: SignalsCoreOptions = {
     baseUrl: BASE_URL,
-    authMode: 'trial' as const,
-    trialToken: MOCK_TRIAL_TOKEN,
+    authMode: 'sandbox' as const,
+    sandboxToken: MOCK_SANDBOX_TOKEN,
   };
   return new Signals({ ...defaultOptions, ...options });
 }

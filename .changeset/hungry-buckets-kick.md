@@ -3,4 +3,4 @@
 "@snowplow/signals-node": minor
 ---
 
-Adding trial authentication support
+Adding sandbox authentication support

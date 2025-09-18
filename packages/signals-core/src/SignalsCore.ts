@@ -21,11 +21,11 @@ import { version } from "./version";
 const X_SIGNALS_SDK_NAME = `signals-ts ${version}`;
 export abstract class SignalsCore {
   baseUrl: string;
-  authMode: 'bdp' | 'trial';
+  authMode: 'bdp' | 'sandbox';
   organizationId?: string;
   apiKeyId?: string;
   apiKey?: string;
-  trialToken?: string;
+  sandboxToken?: string;
   private accessToken: string | undefined = undefined;
 
   constructor(params: SignalsCoreOptions) {
@@ -39,11 +39,11 @@ export abstract class SignalsCore {
     this.organizationId = params.organizationId;
     this.apiKeyId = params.apiKeyId;
     this.apiKey = params.apiKey;
-    this.trialToken = params.trialToken;
+    this.sandboxToken = params.sandboxToken;
 
-    if (this.authMode === 'trial') {
-      if (!this.trialToken) {
-        throw new Error('[Signals] trialToken required when authMode is "trial"');
+    if (this.authMode === 'sandbox') {
+      if (!this.sandboxToken) {
+        throw new Error('[Signals] sandboxToken required when authMode is "sandbox"');
       }
     } else {
       // BDP mode validation
@@ -58,9 +58,9 @@ export abstract class SignalsCore {
   }
 
   protected async _fetchToken(): Promise<string> {
-    if (this.authMode === 'trial') {
-      // For trial mode, we use the trial token directly
-      return this.trialToken!;
+    if (this.authMode === 'sandbox') {
+      // For sandbox mode, we use the sandbox token directly
+      return this.sandboxToken!;
     }
 
     // BDP token fetching logic
@@ -163,9 +163,9 @@ export abstract class SignalsCore {
   }
 
   private async _checkToken(token: string | undefined): Promise<string> {
-    if (this.authMode === 'trial') {
-      // Trial tokens don't expire, always return the trial token
-      return this.trialToken!;
+    if (this.authMode === 'sandbox') {
+      // Sandbox tokens don't expire, always return the sandbox token
+      return this.sandboxToken!;
     }
 
     // BDP token management with expiration checking

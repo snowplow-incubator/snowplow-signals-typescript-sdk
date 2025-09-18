@@ -1,4 +1,4 @@
-import { createTestClient, createTrialTestClient } from "../utils";
+import { createTestClient, createSandboxTestClient } from "../utils";
 
 describe("Auth", () => {
   test("Should throw on failed BDP auth", async () => {
@@ -13,16 +13,16 @@ describe("Auth", () => {
     }).rejects.toThrow("[Signals] Failed to fetch access token");
   });
 
-  test("Should initialize with trial mode", () => {
+  test("Should initialize with sandbox mode", () => {
     expect(() => {
-      createTrialTestClient();
+      createSandboxTestClient();
     }).not.toThrow();
   });
 
-  test("Should throw when trial mode is missing token", () => {
+  test("Should throw when sandbox mode is missing token", () => {
     expect(() => {
-      createTrialTestClient({ trialToken: undefined });
-    }).toThrow("[Signals] trialToken required when authMode is \"trial\"");
+      createSandboxTestClient({ sandboxToken: undefined });
+    }).toThrow("[Signals] sandboxToken required when authMode is \"sandbox\"");
   });
 
   test("Should throw when BDP mode is missing apiKey", () => {

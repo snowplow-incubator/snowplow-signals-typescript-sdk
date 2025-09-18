@@ -44,16 +44,16 @@ try {
   process.exit(1);
 }
 
-// Test 4: Instance creation with TRIAL authentication
+// Test 4: Instance creation with SANDBOX authentication
 try {
-  const trialSignals = new Signals({
+  const sandboxSignals = new Signals({
     baseUrl: "https://example.com",
-    authMode: 'trial',
-    trialToken: 'test-trial-token',
+    authMode: 'sandbox',
+    sandboxToken: 'test-sandbox-token',
   });
-  console.log("✅ TRIAL instance creation successful");
+  console.log("✅ SANDBOX instance creation successful");
 } catch (error) {
-  console.error("❌ TRIAL instance creation failed:", (error as Error).message);
+  console.error("❌ SANDBOX instance creation failed:", (error as Error).message);
   process.exit(1);
 }
 
