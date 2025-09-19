@@ -1,5 +1,12 @@
 # @snowplow/signals-core
 
+## 0.2.0
+
+### Minor Changes
+
+- ae7c38c: Adding sandbox authentication support
+- f13e814: Renames for the latest API version
+
 ## 0.1.2
 
 ### Patch Changes

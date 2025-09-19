@@ -1,5 +1,18 @@
 # @snowplow/signals-node
 
+## 0.2.0
+
+### Minor Changes
+
+- ae7c38c: Adding sandbox authentication support
+- f13e814: Renames for the latest API version
+
+### Patch Changes
+
+- Updated dependencies [ae7c38c]
+- Updated dependencies [f13e814]
+  - @snowplow/signals-core@0.2.0
+
 ## 0.1.2
 
 ### Patch Changes
