@@ -48,3 +48,19 @@ export type SignalsCoreOptions = {
   apiKeyId: string;
   organizationId: string;
 };
+
+export type SignalsCoreSandboxOptions = {
+  baseUrl: string;
+  sandboxToken: string;
+};
+
+export function isBDPAuthOptions(options: SignalsCoreOptions | SignalsCoreSandboxOptions): options is SignalsCoreOptions {
+  return 'apiKey' in options && 'apiKeyId' in options && 'organizationId' in options &&
+    options.apiKey !== undefined && options.apiKeyId !== undefined && options.organizationId !== undefined &&
+    !('sandboxToken' in options && options.sandboxToken !== undefined);
+}
+
+export function isSandboxAuthOptions(options: SignalsCoreOptions | SignalsCoreSandboxOptions): options is SignalsCoreSandboxOptions {
+  return 'sandboxToken' in options && options.sandboxToken !== undefined &&
+    !('apiKey' in options && options.apiKey !== undefined);
+}

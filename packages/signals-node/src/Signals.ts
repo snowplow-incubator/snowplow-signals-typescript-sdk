@@ -2,18 +2,14 @@ import { axiosFetch } from "./axiosFetch";
 import { SignalsCore } from "@snowplow/signals-core";
 import type {
   SignalsCoreOptions,
+  SignalsCoreSandboxOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
 } from "@snowplow/signals-core";
 
 export class Signals extends SignalsCore {
-  constructor(params: SignalsCoreOptions) {
-    super({
-      baseUrl: params.baseUrl,
-      apiKey: params.apiKey,
-      apiKeyId: params.apiKeyId,
-      organizationId: params.organizationId,
-    });
+  constructor(params: SignalsCoreOptions | SignalsCoreSandboxOptions) {
+    super(params);
   }
 
   fetch(
