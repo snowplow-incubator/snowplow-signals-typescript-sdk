@@ -5,8 +5,13 @@ import type {
   GetServiceAttributesRequest,
   GetGroupAttributesRequest,
   SignalsCoreOptions,
+  SignalsCoreSandboxOptions,
   SignalsFetchOptions,
   SignalsFetchResponse,
+} from "./types";
+import {
+  isBDPAuthOptions,
+  isSandboxAuthOptions,
 } from "./types";
 import {
   formatGetAttributesResponse,
@@ -21,35 +26,51 @@ import { version } from "./version";
 const X_SIGNALS_SDK_NAME = `signals-ts ${version}`;
 export abstract class SignalsCore {
   baseUrl: string;
-  organizationId: string;
-  apiKeyId: string;
-  apiKey: string;
+  authMode: 'bdp' | 'sandbox';
+  organizationId?: string;
+  apiKeyId?: string;
+  apiKey?: string;
+  sandboxToken?: string;
   private accessToken: string | undefined = undefined;
 
-  constructor(params: SignalsCoreOptions) {
-    this.baseUrl = removeTrailingSlash(params.baseUrl);
-    this.organizationId = params.organizationId;
-    this.apiKeyId = params.apiKeyId;
-    this.apiKey = params.apiKey;
+  constructor(params: SignalsCoreOptions | SignalsCoreSandboxOptions) {
+    // Validate required parameters first
+    if (!params.baseUrl) {
+      throw new Error('[Signals] baseUrl required for instantiation');
+    }
 
-    const requiredParams = [
-      "baseUrl",
-      "apiKey",
-      "apiKeyId",
-      "organizationId",
-    ] as const;
-    const missingParams = requiredParams.filter((param) => !this[param]);
-    if (missingParams.length > 0) {
-      throw new Error(
-        `[Signals] ${missingParams.join(", ")} required for instantiation`
-      );
+    this.baseUrl = removeTrailingSlash(params.baseUrl);
+    
+    // Infer auth mode from the provided options
+    if (isSandboxAuthOptions(params)) {
+      this.authMode = 'sandbox';
+      this.sandboxToken = params.sandboxToken;
+      this.organizationId = undefined;
+      this.apiKeyId = undefined;
+      this.apiKey = undefined;
+    } else if (isBDPAuthOptions(params)) {
+      this.authMode = 'bdp';
+      this.organizationId = params.organizationId;
+      this.apiKeyId = params.apiKeyId;
+      this.apiKey = params.apiKey;
+      this.sandboxToken = undefined;
+    } else {
+      throw new Error('[Signals] Invalid authentication options provided. Must provide either sandbox token or BDP credentials (apiKey, apiKeyId, organizationId)');
     }
   }
 
-  protected async _fetchToken(): Promise<string> {
+  private async _fetchToken(): Promise<string> {
+    // BDP token fetching logic – `_fetchToken` is called only on BDP auth mode
     const accessTokenUrl = process.env.BDP_NEXT
       ? `https://next.console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`
       : `https://console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`;
+
+    if (!this.apiKey) {
+      throw new Error('[Signals] apiKey is required for BDP authentication');
+    }
+    if (!this.apiKeyId) {
+      throw new Error('[Signals] apiKeyId is required for BDP authentication');
+    }
 
     try {
       const response = await this.fetch(accessTokenUrl, {
@@ -146,6 +167,12 @@ export abstract class SignalsCore {
   }
 
   private async _checkToken(token: string | undefined): Promise<string> {
+    if (this.authMode === 'sandbox') {
+      // Sandbox tokens don't expire, always return the sandbox token
+      return this.sandboxToken!;
+    }
+
+    // BDP token management with expiration checking
     if (token === undefined) {
       return await this._fetchToken();
     } else if (isJwtExpired(token)) {
