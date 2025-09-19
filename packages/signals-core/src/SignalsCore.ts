@@ -59,23 +59,25 @@ export abstract class SignalsCore {
     }
   }
 
-  protected async _fetchToken(): Promise<string> {
-    if (this.authMode === 'sandbox') {
-      // For sandbox mode, we use the sandbox token directly
-      return this.sandboxToken!;
-    }
-
-    // BDP token fetching logic
+  private async _fetchToken(): Promise<string> {
+    // BDP token fetching logic – `_fetchToken` is called only on BDP auth mode
     const accessTokenUrl = process.env.BDP_NEXT
       ? `https://next.console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`
       : `https://console.snowplowanalytics.com/api/msc/v1/organizations/${this.organizationId}/credentials/v3/token`;
+
+    if (!this.apiKey) {
+      throw new Error('[Signals] apiKey is required for BDP authentication');
+    }
+    if (!this.apiKeyId) {
+      throw new Error('[Signals] apiKeyId is required for BDP authentication');
+    }
 
     try {
       const response = await this.fetch(accessTokenUrl, {
         method: "GET",
         headers: {
-          "X-API-Key-Id": this.apiKeyId!,
-          "X-API-Key": this.apiKey!,
+          "X-API-Key-Id": this.apiKeyId,
+          "X-API-Key": this.apiKey,
           "X-Signals-Sdk-Name": X_SIGNALS_SDK_NAME,
         },
       });
