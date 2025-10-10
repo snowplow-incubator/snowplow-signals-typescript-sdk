@@ -11,6 +11,7 @@ main: Production ready code.
 ### Supporting branches
 feature/<name>: For new features.
 fix/<name>: For fixes to production.
+chore/<name>: For updates not affecting production code.
 
 ### Rules
 - Always branch off `main`.
@@ -24,6 +25,14 @@ We follow [Semantic Versioning](https://semver.org/):
 
 - **Before 1.0.0:** Breaking changes may occur in minor version bumps (0.x → 0.y).
 - **After 1.0.0:** Any breaking change will require incrementing the **MAJOR** version.
+
+## Commits
+- Prefix your commit with the JIRA reference, where possible
+E.g. `[AISP-184] XYZ`
+
+## PRs
+- Make sure to name the PR starting with the JIRA reference:
+E.g. `[AISP-184] XYZ`
 
 ## Release Process
 The repository uses [changesets](https://github.com/changesets/changesets) to manage releases, changelog generation and versioning.
