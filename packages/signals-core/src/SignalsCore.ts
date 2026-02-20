@@ -193,11 +193,13 @@ export abstract class SignalsCore {
       options.headers.Authorization || `Bearer ${accessToken}`;
 
     const res = await this.fetch(url, options);
-    const data = await res.json();
 
     if (res.status < 200 || res.status >= 400) {
-      throw new Error(`[Signals] ${res.status} ${res.text()}`);
+      const errorText = await res.text();
+      throw new Error(`[Signals] ${res.status} ${errorText}`);
     }
+
+    const data = await res.json();
 
     return data;
   }
