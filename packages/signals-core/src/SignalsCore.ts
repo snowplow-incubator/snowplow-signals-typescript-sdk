@@ -22,8 +22,10 @@ import {
   removeTrailingSlash,
 } from "./utils";
 import { version } from "./version";
+import { SignalsAPIError } from "./errors";
 
 const X_SIGNALS_SDK_NAME = `signals-ts ${version}`;
+
 export abstract class SignalsCore {
   baseUrl: string;
   authMode: 'bdp' | 'sandbox';
@@ -40,7 +42,7 @@ export abstract class SignalsCore {
     }
 
     this.baseUrl = removeTrailingSlash(params.baseUrl);
-    
+
     // Infer auth mode from the provided options
     if (isSandboxAuthOptions(params)) {
       this.authMode = 'sandbox';
@@ -195,12 +197,9 @@ export abstract class SignalsCore {
     const res = await this.fetch(url, options);
 
     if (res.status < 200 || res.status >= 400) {
-      const errorText = await res.text();
-      throw new Error(`[Signals] ${res.status} ${errorText}`);
+      throw new SignalsAPIError(res.status, await res.text());
     }
 
-    const data = await res.json();
-
-    return data;
+    return await res.json();
   }
 }
