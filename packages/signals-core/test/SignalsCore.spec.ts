@@ -1,4 +1,5 @@
 import { SignalsCore } from "../src/SignalsCore";
+import { SignalsAPIError } from "../src/errors";
 import type { SignalsFetchOptions, SignalsFetchResponse } from "../src/types";
 
 class TestSignalsCore extends SignalsCore {
@@ -34,13 +35,18 @@ describe("SignalsCore", () => {
 
       signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
 
-      await expect(
-        signalsCore.getServiceAttributes({
+      try {
+        await signalsCore.getServiceAttributes({
           name: "test-service",
           attribute_key: "test-key",
           identifier: "test-id",
-        })
-      ).rejects.toThrow(`[Signals] 400 ${errorText}`);
+        });
+        fail("Should have thrown");
+      } catch (e) {
+        expect(e).toBeInstanceOf(SignalsAPIError);
+        expect((e as SignalsAPIError).status).toBe(400);
+        expect((e as SignalsAPIError).response).toBe(errorText);
+      }
 
       expect(mockResponse.text).toHaveBeenCalled();
     });
@@ -60,13 +66,18 @@ describe("SignalsCore", () => {
 
       signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
 
-      await expect(
-        signalsCore.getServiceAttributes({
+      try {
+        await signalsCore.getServiceAttributes({
           name: "test-service",
           attribute_key: "test-key",
           identifier: "test-id",
-        })
-      ).rejects.toThrow(`[Signals] 500 ${errorText}`);
+        });
+        fail("Should have thrown");
+      } catch (e) {
+        expect(e).toBeInstanceOf(SignalsAPIError);
+        expect((e as SignalsAPIError).status).toBe(500);
+        expect((e as SignalsAPIError).response).toBe(errorText);
+      }
 
       expect(mockResponse.text).toHaveBeenCalled();
     });
@@ -95,6 +106,37 @@ describe("SignalsCore", () => {
       expect(mockResponse.json).toHaveBeenCalled();
       expect(mockResponse.text).not.toHaveBeenCalled();
       expect(result).toEqual({ test_attribute: [123] });
+    });
+
+    it("should include raw response text in error", async () => {
+      const jsonError = JSON.stringify({ error: "invalid group version format" });
+      const mockResponse: SignalsFetchResponse = {
+        status: 400,
+        json: jest.fn().mockResolvedValue({}),
+        text: jest.fn().mockResolvedValue(jsonError),
+      };
+
+      const signalsCore = new TestSignalsCore({
+        baseUrl: "https://api.example.com",
+        sandboxToken: "test-token",
+      });
+
+      signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
+
+      try {
+        await signalsCore.getServiceAttributes({
+          name: "test-service",
+          attribute_key: "test-key",
+          identifier: "test-id",
+        });
+        fail("Should have thrown");
+      } catch (e) {
+        expect(e).toBeInstanceOf(SignalsAPIError);
+        expect((e as SignalsAPIError).status).toBe(400);
+        expect((e as SignalsAPIError).response).toBe(jsonError);
+      }
+
+      expect(mockResponse.text).toHaveBeenCalled();
     });
   });
 });
