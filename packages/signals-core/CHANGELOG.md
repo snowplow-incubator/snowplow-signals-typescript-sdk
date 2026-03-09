@@ -1,5 +1,15 @@
 # @snowplow/signals-core
 
+## 0.3.0
+
+### Minor Changes
+
+- 6723bec: Add SignalsAPIError for structured error handling
+
+### Patch Changes
+
+- 82a90c7: Await res.text() in fetchResult
+
 ## 0.2.0
 
 ### Minor Changes

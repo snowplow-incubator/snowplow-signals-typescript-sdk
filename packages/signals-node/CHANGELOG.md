@@ -1,5 +1,13 @@
 # @snowplow/signals-node
 
+## 0.3.0
+
+### Patch Changes
+
+- Updated dependencies [6723bec]
+- Updated dependencies [82a90c7]
+  - @snowplow/signals-core@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
