@@ -1,5 +1,11 @@
 # @snowplow/signals-core
 
+## 0.3.1
+
+### Patch Changes
+
+- d5f7b80: Update axios version to latest stable 1.15.1
+
 ## 0.3.0
 
 ### Minor Changes

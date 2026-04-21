@@ -1,5 +1,13 @@
 # @snowplow/signals-node
 
+## 0.3.1
+
+### Patch Changes
+
+- d5f7b80: Update axios version to latest stable 1.15.1
+- Updated dependencies [d5f7b80]
+  - @snowplow/signals-core@0.3.1
+
 ## 0.3.0
 
 ### Patch Changes
