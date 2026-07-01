@@ -139,4 +139,93 @@ describe("SignalsCore", () => {
       expect(mockResponse.text).toHaveBeenCalled();
     });
   });
+
+  describe("getAgenticContext", () => {
+    const newSignalsCore = () =>
+      new TestSignalsCore({
+        baseUrl: "https://api.example.com",
+        sandboxToken: "test-token",
+      });
+
+    it("requests the event_log endpoint with GET and returns parsed json by default", async () => {
+      const responseBody = {
+        attribute_key: "user_id",
+        identifier: "1232121321",
+        name: "context",
+        started_at_ms: 1700000000000,
+        events: [{ event_name: "page_view" }],
+      };
+      const mockResponse: SignalsFetchResponse = {
+        status: 200,
+        json: jest.fn().mockResolvedValue(responseBody),
+        text: jest.fn().mockResolvedValue(JSON.stringify(responseBody)),
+      };
+
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
+
+      const result = await signalsCore.getAgenticContext({
+        name: "context",
+        identifier: "1232121321",
+      });
+
+      const [url, options] = (signalsCore.mockFetch as jest.Mock).mock.calls[0];
+      expect(url).toContain("/api/v1/event_log?");
+      expect(url).toContain("identifier=1232121321");
+      expect(url).toContain("name=context");
+      expect(url).not.toContain("format=");
+      expect(options.method).toBe("GET");
+      expect(mockResponse.json).toHaveBeenCalled();
+      expect(mockResponse.text).not.toHaveBeenCalled();
+      expect(result).toEqual(responseBody);
+    });
+
+    it("returns raw plain text when format is narrative", async () => {
+      const narrative = "The user viewed 3 pages in this session.";
+      const mockResponse: SignalsFetchResponse = {
+        status: 200,
+        json: jest.fn().mockResolvedValue(narrative),
+        text: jest.fn().mockResolvedValue(narrative),
+      };
+
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
+
+      const result = await signalsCore.getAgenticContext({
+        name: "context",
+        identifier: "1232121321",
+        format: "narrative",
+      });
+
+      const [url] = (signalsCore.mockFetch as jest.Mock).mock.calls[0];
+      expect(url).toContain("format=narrative");
+      expect(mockResponse.text).toHaveBeenCalled();
+      expect(mockResponse.json).not.toHaveBeenCalled();
+      expect(result).toBe(narrative);
+    });
+
+    it("throws SignalsAPIError when the event log is not found", async () => {
+      const errorText = JSON.stringify({ error: "event log name not found" });
+      const mockResponse: SignalsFetchResponse = {
+        status: 404,
+        json: jest.fn().mockResolvedValue({}),
+        text: jest.fn().mockResolvedValue(errorText),
+      };
+
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
+
+      try {
+        await signalsCore.getAgenticContext({
+          name: "context",
+          identifier: "1232121321",
+        });
+        fail("Should have thrown");
+      } catch (e) {
+        expect(e).toBeInstanceOf(SignalsAPIError);
+        expect((e as SignalsAPIError).status).toBe(404);
+        expect((e as SignalsAPIError).response).toBe(errorText);
+      }
+    });
+  });
 });

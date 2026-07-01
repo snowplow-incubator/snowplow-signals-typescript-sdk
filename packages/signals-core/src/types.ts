@@ -28,6 +28,14 @@ export type GetBatchServiceAttributesRequest = {
   attribute_key: string | SnowplowStandardAttributeKeys;
 };
 
+export type AgenticContextFormat = "json" | "narrative";
+
+export type GetAgenticContextRequest = {
+  name: string;
+  identifier: string;
+  format?: AgenticContextFormat;
+};
+
 export type VersionedAttributeName = `${string}_v${number}:${string}`;
 
 export type SignalsFetchOptions = {
