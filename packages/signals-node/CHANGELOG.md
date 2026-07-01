@@ -1,5 +1,16 @@
 # @snowplow/signals-node
 
+## 0.4.0
+
+### Minor Changes
+
+- 28d785d: Add `getAgenticContext` method to read the buffered event log for an identifier from the `GET /api/v1/event_log` endpoint. Returns a structured `AgenticContextResponse` by default, or an LLM-ready plain-text string when `format: "narrative"` is passed.
+
+### Patch Changes
+
+- Updated dependencies [28d785d]
+  - @snowplow/signals-core@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
