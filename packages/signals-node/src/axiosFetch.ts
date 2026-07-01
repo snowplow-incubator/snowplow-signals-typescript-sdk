@@ -19,6 +19,9 @@ export const axiosFetch = async (
     return {
       status: res.status,
       text: async () => {
+        if (typeof res.data === "string") {
+          return res.data;
+        }
         try {
           return JSON.stringify(res.data);
         } catch (err) {

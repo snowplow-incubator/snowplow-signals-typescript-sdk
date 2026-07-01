@@ -4,6 +4,9 @@ export type {
   GetGroupAttributesRequest,
   SnowplowStandardAttributeKeys,
   GetBatchServiceAttributesRequest,
+  GetAgenticContextRequest,
+  AgenticContextFormat,
+  AgenticContextResponse,
   SignalsCoreOptions,
   SignalsCoreSandboxOptions,
 } from "@snowplow/signals-core";

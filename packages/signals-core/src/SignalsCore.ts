@@ -1,6 +1,8 @@
 import { GetOnlineAttributesRequest } from "./models/GetOnlineAttributesRequest";
 import type { GetAttributesResponse } from "./models/GetAttributesResponse";
+import type { AgenticContextResponse } from "./models/AgenticContextResponse";
 import type {
+  GetAgenticContextRequest,
   GetBatchServiceAttributesRequest,
   GetServiceAttributesRequest,
   GetGroupAttributesRequest,
@@ -141,6 +143,31 @@ export abstract class SignalsCore {
     });
   }
 
+  async getAgenticContext(
+    request: GetAgenticContextRequest & { format: "narrative" }
+  ): Promise<string>;
+  async getAgenticContext(
+    request: GetAgenticContextRequest & { format?: "json" }
+  ): Promise<AgenticContextResponse>;
+  async getAgenticContext(
+    request: GetAgenticContextRequest
+  ): Promise<AgenticContextResponse | string> {
+    const params = new URLSearchParams({
+      identifier: request.identifier,
+      name: request.name,
+    });
+    if (request.format) params.set("format", request.format);
+
+    const res = await this._authorizedFetch(
+      `${this.baseUrl}/api/v1/event_log?${params.toString()}`,
+      this._getFetchOptions({ method: "GET" })
+    );
+
+    return request.format === "narrative"
+      ? await res.text()
+      : await res.json();
+  }
+
   private async _getOnlineAttributesRequest(
     getOnlineAttributes: GetOnlineAttributesRequest
   ): Promise<GetAttributesResponse> {
@@ -185,10 +212,10 @@ export abstract class SignalsCore {
     }
   }
 
-  private async fetchResult<T>(
+  private async _authorizedFetch(
     url: string,
     options: SignalsFetchOptions
-  ): Promise<T> {
+  ): Promise<SignalsFetchResponse> {
     const accessToken = await this._checkToken(this.accessToken);
     this.accessToken = accessToken;
     options.headers.Authorization =
@@ -200,6 +227,14 @@ export abstract class SignalsCore {
       throw new SignalsAPIError(res.status, await res.text());
     }
 
+    return res;
+  }
+
+  private async fetchResult<T>(
+    url: string,
+    options: SignalsFetchOptions
+  ): Promise<T> {
+    const res = await this._authorizedFetch(url, options);
     return await res.json();
   }
 }
