@@ -1,5 +1,11 @@
 # @snowplow/signals-core
 
+## 0.4.1
+
+### Patch Changes
+
+- 5af641a: Update axios version to latest stable 1.19.0 to resolve open security advisories
+
 ## 0.4.0
 
 ### Minor Changes

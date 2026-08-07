@@ -1,6 +1,6 @@
 {
   "name": "@snowplow/signals-node",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "scripts": {
     "build": "tsc && tsup",
     "lint": "tsc",
@@ -23,7 +23,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@snowplow/signals-core": "^0.4.0",
+    "@snowplow/signals-core": "^0.4.1",
     "axios": "1.19.0"
   },
   "files": [
