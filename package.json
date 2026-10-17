@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "license": "SEE LICENSE IN LICENSE",
   "description": "",
   "workspaces": [
     "packages/*"

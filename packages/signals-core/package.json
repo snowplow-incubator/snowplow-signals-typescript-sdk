@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "Snowplow <support@snowplow.io>",
-  "license": "SEE LICENSE IN LICENSE.md",
+  "license": "SEE LICENSE IN LICENSE",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
