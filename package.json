@@ -15,8 +15,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "SEE LICENSE IN LICENSE.md",
-  "description": "",
+  "license": "SEE LICENSE IN LICENSE",
+  "description": "Snowplow Signals SDK for TypeScript — retrieve user attributes and agentic context for real-time customer context & digital personalization",
   "workspaces": [
     "packages/*"
   ],
