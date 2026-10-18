@@ -10,7 +10,7 @@
   "keywords": [],
   "author": "Snowplow <support@snowplow.io>",
   "license": "SEE LICENSE IN LICENSE",
-  "description": "",
+  "description": "Transport-agnostic core for building Snowplow Signals SDKs for real-time customer context & digital personalization",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
