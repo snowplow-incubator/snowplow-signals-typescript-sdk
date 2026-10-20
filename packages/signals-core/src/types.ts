@@ -38,6 +38,35 @@ export type GetAgenticContextRequest = {
 
 export type VersionedAttributeName = `${string}_v${number}:${string}`;
 
+/**
+ * Attribute-key targets for an intervention: a mapping of attribute key name
+ * (e.g. `domain_userid`) to the list of identifiers to target. Sent as repeated
+ * query parameters, e.g. `?domain_userid=<id1>&domain_userid=<id2>`.
+ */
+export type AttributeKeyIdentifiers = Record<string, string[]>;
+
+export type TargetAttributeKey = {
+  name: string;
+  id: string;
+};
+
+/**
+ * The intervention payload published to subscribers.
+ */
+export type InterventionInstance = {
+  name: string;
+  version: number;
+  intervention_id?: string;
+  attributes?: Record<string, string>;
+  target_attribute_key?: TargetAttributeKey;
+};
+
+/**
+ * Delivery outcome returned by the publish endpoint. `undelivered` means the
+ * publish succeeded but no subscriber was currently listening for the targets.
+ */
+export type PublishInterventionStatus = "undelivered" | "success" | "failure";
+
 export type SignalsFetchOptions = {
   method: "GET" | "POST" | "PUT" | "PATCH";
   headers: { [key: string]: string };

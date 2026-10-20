@@ -230,7 +230,7 @@ export abstract class SignalsCore {
     return res;
   }
 
-  private async fetchResult<T>(
+  protected async fetchResult<T>(
     url: string,
     options: SignalsFetchOptions
   ): Promise<T> {
