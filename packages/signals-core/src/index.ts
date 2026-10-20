@@ -12,4 +12,8 @@ export type {
   GetBatchServiceAttributesRequest,
   GetAgenticContextRequest,
   AgenticContextFormat,
+  AttributeKeyIdentifiers,
+  InterventionInstance,
+  TargetAttributeKey,
+  PublishInterventionStatus,
 } from "./types";

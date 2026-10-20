@@ -9,4 +9,8 @@ export type {
   AgenticContextResponse,
   SignalsCoreOptions,
   SignalsCoreSandboxOptions,
+  AttributeKeyIdentifiers,
+  InterventionInstance,
+  TargetAttributeKey,
+  PublishInterventionStatus,
 } from "@snowplow/signals-core";

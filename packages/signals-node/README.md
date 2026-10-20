@@ -31,4 +31,17 @@ const attributes = await signals.getServiceAttributes({
 });
 ```
 
+### Publishing interventions
+
+Publish an intervention to any subscribers currently listening for the given
+attribute-key targets. The returned status is `"undelivered"` when the publish
+succeeded but no subscriber was listening for the targets.
+
+```js
+const status = await signals.publishIntervention(
+  { domain_userid: ["e24d3aaa-160e-40de-a569-1580fb3ad6d7"] },
+  { name: "show_offer", version: 1 }
+);
+```
+
 ## Documentation (WIP)
