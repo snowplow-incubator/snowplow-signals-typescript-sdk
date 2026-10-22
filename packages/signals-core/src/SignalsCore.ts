@@ -1,11 +1,13 @@
 import { GetOnlineAttributesRequest } from "./models/GetOnlineAttributesRequest";
 import type { GetAttributesResponse } from "./models/GetAttributesResponse";
 import type { AgenticContextResponse } from "./models/AgenticContextResponse";
+import type { PredictiveAttributeScore } from "./models/PredictiveAttributeScore";
 import type {
   GetAgenticContextRequest,
   GetBatchServiceAttributesRequest,
   GetServiceAttributesRequest,
   GetGroupAttributesRequest,
+  GetPredictiveAttributeScoreRequest,
   SignalsCoreOptions,
   SignalsCoreSandboxOptions,
   SignalsFetchOptions,
@@ -166,6 +168,25 @@ export abstract class SignalsCore {
     return request.format === "narrative"
       ? await res.text()
       : await res.json();
+  }
+
+  async getPredictiveAttributeScore(
+    request: GetPredictiveAttributeScoreRequest
+  ): Promise<PredictiveAttributeScore> {
+    if ("name" in request.identifiers) {
+      throw new Error(
+        "[Signals] 'name' is reserved for the predictive attribute name and can't be used as an attribute key"
+      );
+    }
+    const params = new URLSearchParams({
+      name: request.name,
+      ...request.identifiers,
+    });
+
+    return await this.fetchResult<PredictiveAttributeScore>(
+      `${this.baseUrl}/api/v1/predictive_attribute?${params.toString()}`,
+      this._getFetchOptions({ method: "GET" })
+    );
   }
 
   private async _getOnlineAttributesRequest(
