@@ -170,12 +170,31 @@ export abstract class SignalsCore {
       : await res.json();
   }
 
+  /**
+   * Scores a published predictive attribute for one entity.
+   *
+   * Unlike other attributes, a predictive attribute can use attribute groups with
+   * different attribute keys, so it takes one identifier per attribute key, e.g.
+   * `{ domain_sessionid: "...", domain_userid: "..." }`.
+   *
+   * The score is between 0 and 1. Use it to rank entities rather than as a
+   * calibrated probability.
+   *
+   * Throws a `SignalsAPIError` with status 503 while scoring is temporarily
+   * unavailable, e.g. while a model is being published or loaded.
+   */
   async getPredictiveAttributeScore(
     request: GetPredictiveAttributeScoreRequest
   ): Promise<PredictiveAttributeScore> {
     if ("name" in request.identifiers) {
       throw new Error(
         "[Signals] 'name' is reserved for the predictive attribute name and can't be used as an attribute key"
+      );
+    }
+    // The API treats empty values as not given
+    if (!Object.values(request.identifiers).some((identifier) => identifier)) {
+      throw new Error(
+        "[Signals] At least one identifier is required to get a predictive attribute score"
       );
     }
     const params = new URLSearchParams({

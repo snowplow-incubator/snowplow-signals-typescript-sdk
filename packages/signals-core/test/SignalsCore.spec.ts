@@ -281,6 +281,22 @@ describe("SignalsCore", () => {
       expect(signalsCore.mockFetch).not.toHaveBeenCalled();
     });
 
+    it.each([
+      ["no identifiers", {}],
+      ["only empty identifiers", { domain_sessionid: "" }],
+    ])("rejects %s without making a request", async (_, identifiers) => {
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn();
+
+      await expect(
+        signalsCore.getPredictiveAttributeScore({
+          name: "purchase_propensity",
+          identifiers,
+        })
+      ).rejects.toThrow("At least one identifier is required");
+      expect(signalsCore.mockFetch).not.toHaveBeenCalled();
+    });
+
     it("throws SignalsAPIError when the predictive attribute is not published", async () => {
       const errorText = JSON.stringify({ detail: "not found" });
       const mockResponse: SignalsFetchResponse = {
