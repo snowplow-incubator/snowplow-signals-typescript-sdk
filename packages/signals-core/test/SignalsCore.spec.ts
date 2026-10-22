@@ -228,4 +228,96 @@ describe("SignalsCore", () => {
       }
     });
   });
+
+  describe("getPredictiveAttributeScore", () => {
+    const newSignalsCore = () =>
+      new TestSignalsCore({
+        baseUrl: "https://api.example.com",
+        sandboxToken: "test-token",
+      });
+
+    it("requests the predictive_attribute endpoint with GET and one query param per identifier", async () => {
+      const responseBody = {
+        name: "purchase_propensity",
+        version: 2,
+        minor_version: 0,
+        score: 0.42,
+      };
+      const mockResponse: SignalsFetchResponse = {
+        status: 200,
+        json: jest.fn().mockResolvedValue(responseBody),
+        text: jest.fn().mockResolvedValue(JSON.stringify(responseBody)),
+      };
+
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
+
+      const result = await signalsCore.getPredictiveAttributeScore({
+        name: "purchase_propensity",
+        identifiers: { domain_sessionid: "abc", domain_userid: "def" },
+      });
+
+      const [url, options] = (signalsCore.mockFetch as jest.Mock).mock.calls[0];
+      const parsedUrl = new URL(url);
+      expect(parsedUrl.pathname).toBe("/api/v1/predictive_attribute");
+      expect(parsedUrl.searchParams.get("name")).toBe("purchase_propensity");
+      expect(parsedUrl.searchParams.get("domain_sessionid")).toBe("abc");
+      expect(parsedUrl.searchParams.get("domain_userid")).toBe("def");
+      expect(options.method).toBe("GET");
+      expect(options.headers.Authorization).toBe("Bearer test-token");
+      expect(result).toEqual(responseBody);
+    });
+
+    it("rejects an identifier named name without making a request", async () => {
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn();
+
+      await expect(
+        signalsCore.getPredictiveAttributeScore({
+          name: "purchase_propensity",
+          identifiers: { name: "abc" },
+        })
+      ).rejects.toThrow("'name' is reserved");
+      expect(signalsCore.mockFetch).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ["no identifiers", {}],
+      ["only empty identifiers", { domain_sessionid: "" }],
+    ])("rejects %s without making a request", async (_, identifiers) => {
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn();
+
+      await expect(
+        signalsCore.getPredictiveAttributeScore({
+          name: "purchase_propensity",
+          identifiers,
+        })
+      ).rejects.toThrow("At least one identifier is required");
+      expect(signalsCore.mockFetch).not.toHaveBeenCalled();
+    });
+
+    it("throws SignalsAPIError when the predictive attribute is not published", async () => {
+      const errorText = JSON.stringify({ detail: "not found" });
+      const mockResponse: SignalsFetchResponse = {
+        status: 404,
+        json: jest.fn().mockResolvedValue({}),
+        text: jest.fn().mockResolvedValue(errorText),
+      };
+
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
+
+      const error = await signalsCore
+        .getPredictiveAttributeScore({
+          name: "purchase_propensity",
+          identifiers: { domain_sessionid: "abc" },
+        })
+        .catch((e) => e);
+
+      expect(error).toBeInstanceOf(SignalsAPIError);
+      expect((error as SignalsAPIError).status).toBe(404);
+      expect((error as SignalsAPIError).response).toBe(errorText);
+    });
+  });
 });
