@@ -1,5 +1,17 @@
 # @snowplow/signals-node
 
+## 0.4.2
+
+### Patch Changes
+
+- 2402aa5: Add package descriptions so the packages have a summary on npm.
+- 2402aa5: Expand the package READMEs so the npm pages carry the same overview, usage examples, and links as the repository README.
+- 2402aa5: Rename `LICENSE.md` to `LICENSE` as the file is plain-text Apache 2.0, not Markdown. Updates the `license` field in each `package.json` accordingly.
+- Updated dependencies [2402aa5]
+- Updated dependencies [2402aa5]
+- Updated dependencies [2402aa5]
+  - @snowplow/signals-core@0.4.2
+
 ## 0.4.1
 
 ### Patch Changes
