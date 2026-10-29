@@ -7,8 +7,6 @@ export type {
   GetAgenticContextRequest,
   AgenticContextFormat,
   AgenticContextResponse,
-  GetPredictiveAttributeScoreRequest,
-  PredictiveAttributeScore,
   SignalsCoreOptions,
   SignalsCoreSandboxOptions,
 } from "@snowplow/signals-core";

@@ -1,7 +1,6 @@
 export { SignalsCore } from "./SignalsCore";
 export { SignalsAPIError } from "./errors";
 export type { AgenticContextResponse } from "./models/AgenticContextResponse";
-export type { PredictiveAttributeScore } from "./models/PredictiveAttributeScore";
 export type {
   SignalsCoreOptions,
   SignalsCoreSandboxOptions,
@@ -13,5 +12,4 @@ export type {
   GetBatchServiceAttributesRequest,
   GetAgenticContextRequest,
   AgenticContextFormat,
-  GetPredictiveAttributeScoreRequest,
 } from "./types";

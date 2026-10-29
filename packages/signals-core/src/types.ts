@@ -36,13 +36,6 @@ export type GetAgenticContextRequest = {
   format?: AgenticContextFormat;
 };
 
-export type GetPredictiveAttributeScoreRequest = {
-  name: string;
-  // One identifier per attribute key used by the model's input attribute groups
-  identifiers: Partial<Record<`${SnowplowStandardAttributeKeys}`, string>> &
-    Record<string, string>;
-};
-
 export type VersionedAttributeName = `${string}_v${number}:${string}`;
 
 export type SignalsFetchOptions = {
