@@ -18,7 +18,147 @@ class TestSignalsCore extends SignalsCore {
   };
 }
 
+const createJwt = (expiresInSeconds: number) => {
+  const encode = (value: object) =>
+    Buffer.from(JSON.stringify(value)).toString("base64url");
+  const exp = Math.floor(Date.now() / 1000) + expiresInSeconds;
+  return `${encode({ alg: "none", typ: "JWT" })}.${encode({ exp })}.signature`;
+};
+
 describe("SignalsCore", () => {
+  describe("BDP access token", () => {
+    const TOKEN_URL_PATH = "/credentials/v3/token";
+
+    const newSignalsCore = () =>
+      new TestSignalsCore({
+        baseUrl: "https://api.example.com",
+        organizationId: "test-org",
+        apiKeyId: "test-key-id",
+        apiKey: "test-key",
+      });
+
+    const jsonResponse = (body: unknown, status = 200): SignalsFetchResponse => ({
+      status,
+      json: jest.fn().mockResolvedValue(body),
+      text: jest.fn().mockResolvedValue(JSON.stringify(body)),
+    });
+
+    // Responds to token requests with the given tokens in order, and to API requests with an empty attributes response
+    const mockFetchWithTokens = (
+      signalsCore: TestSignalsCore,
+      ...tokenResponses: SignalsFetchResponse[]
+    ) => {
+      const mockFetch = jest.fn(async (url: string, _options: SignalsFetchOptions) => {
+        if (url.includes(TOKEN_URL_PATH)) {
+          const response = tokenResponses.shift();
+          if (!response) throw new Error("Unexpected token request");
+          // Yield so concurrent callers overlap with the in-flight token request
+          await new Promise((resolve) => setTimeout(resolve, 10));
+          return response;
+        }
+        return jsonResponse({});
+      });
+      signalsCore.mockFetch = mockFetch;
+      return mockFetch;
+    };
+
+    const tokenRequestCount = (mockFetch: jest.Mock) =>
+      mockFetch.mock.calls.filter(([url]) => url.includes(TOKEN_URL_PATH)).length;
+
+    const getAttributes = (signalsCore: SignalsCore) =>
+      signalsCore.getServiceAttributes({
+        name: "test-service",
+        attribute_key: "test-key",
+        identifier: "test-id",
+      });
+
+    it("fetches the token once for concurrent requests", async () => {
+      const token = createJwt(3600);
+      const signalsCore = newSignalsCore();
+      const mockFetch = mockFetchWithTokens(signalsCore, jsonResponse({ accessToken: token }));
+
+      await Promise.all(Array.from({ length: 10 }, () => getAttributes(signalsCore)));
+
+      expect(tokenRequestCount(mockFetch)).toBe(1);
+      const apiCalls = mockFetch.mock.calls.filter(([url]) => !url.includes(TOKEN_URL_PATH));
+      expect(apiCalls).toHaveLength(10);
+      for (const [, options] of apiCalls) {
+        expect(options.headers.Authorization).toBe(`Bearer ${token}`);
+      }
+    });
+
+    it("reuses a valid token across sequential requests", async () => {
+      const signalsCore = newSignalsCore();
+      const mockFetch = mockFetchWithTokens(signalsCore, jsonResponse({ accessToken: createJwt(3600) }));
+
+      await getAttributes(signalsCore);
+      await getAttributes(signalsCore);
+
+      expect(tokenRequestCount(mockFetch)).toBe(1);
+    });
+
+    it("refreshes a token that is about to expire once for concurrent requests", async () => {
+      const freshToken = createJwt(3600);
+      const signalsCore = newSignalsCore();
+      const mockFetch = mockFetchWithTokens(
+        signalsCore,
+        jsonResponse({ accessToken: createJwt(5) }),
+        jsonResponse({ accessToken: freshToken })
+      );
+
+      await getAttributes(signalsCore);
+      await Promise.all(Array.from({ length: 10 }, () => getAttributes(signalsCore)));
+
+      expect(tokenRequestCount(mockFetch)).toBe(2);
+      const [, lastOptions] = mockFetch.mock.calls[mockFetch.mock.calls.length - 1];
+      expect(lastOptions.headers.Authorization).toBe(`Bearer ${freshToken}`);
+    });
+
+    it("retries the token request after a failure", async () => {
+      const signalsCore = newSignalsCore();
+      const mockFetch = mockFetchWithTokens(
+        signalsCore,
+        jsonResponse({ message: "Too many requests" }, 429),
+        jsonResponse({ accessToken: createJwt(3600) })
+      );
+
+      const results = await Promise.allSettled([getAttributes(signalsCore), getAttributes(signalsCore)]);
+      expect(results.map((r) => r.status)).toEqual(["rejected", "rejected"]);
+      expect(tokenRequestCount(mockFetch)).toBe(1);
+
+      await expect(getAttributes(signalsCore)).resolves.toEqual({});
+      expect(tokenRequestCount(mockFetch)).toBe(2);
+    });
+
+    it.each([
+      [
+        "an error status",
+        jsonResponse({ accessToken: "should-not-be-used" }, 401),
+        "[Signals] Failed to fetch access token: Token request failed with status 401",
+      ],
+      [
+        "no accessToken",
+        jsonResponse({}),
+        "[Signals] Failed to fetch access token: Token response did not include an accessToken",
+      ],
+    ])("rejects a token response with %s without calling the API", async (_, tokenResponse, message) => {
+      const signalsCore = newSignalsCore();
+      const mockFetch = mockFetchWithTokens(signalsCore, tokenResponse);
+
+      await expect(getAttributes(signalsCore)).rejects.toThrow(message);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    it("includes the underlying error when the token request throws", async () => {
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn().mockRejectedValue(new Error("[Signals] API error: 429 Too Many Requests"));
+
+      await expect(getAttributes(signalsCore)).rejects.toThrow(
+        "[Signals] Failed to fetch access token: [Signals] API error: 429 Too Many Requests"
+      );
+    });
+  });
+
   describe("fetchResult error handling", () => {
     it("should await error text when response status is an error", async () => {
       const errorText = "Invalid request body";
