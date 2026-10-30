@@ -3,9 +3,24 @@ import {
   getOnlineAttributesApiAttributeKey,
   formatGetAttributesResponse,
   formatGetBatchAttributesResponse,
+  isJwtExpired,
 } from "../src/utils";
 
+const createJwt = (exp: number) => {
+  const encode = (value: object) =>
+    Buffer.from(JSON.stringify(value)).toString("base64url");
+  return `${encode({ alg: "none", typ: "JWT" })}.${encode({ exp })}.signature`;
+};
+
 describe("core utils", () => {
+  test("isJwtExpired", () => {
+    const now = Math.floor(Date.now() / 1000);
+    expect(isJwtExpired(createJwt(now + 60))).toBe(false);
+    expect(isJwtExpired(createJwt(now - 1))).toBe(true);
+    expect(isJwtExpired(createJwt(now + 60), 30)).toBe(false);
+    expect(isJwtExpired(createJwt(now + 20), 30)).toBe(true);
+  });
+
   test("formatVersionedGroupAttribute", () => {
     const result = formatVersionedGroupAttributes({
       groupName: "test_group",
