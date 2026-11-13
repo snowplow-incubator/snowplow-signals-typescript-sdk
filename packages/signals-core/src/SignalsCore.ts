@@ -27,6 +27,8 @@ import { version } from "./version";
 import { SignalsAPIError } from "./errors";
 
 const X_SIGNALS_SDK_NAME = `signals-ts ${version}`;
+// Refresh the access token this long before it expires, so it doesn't expire while a request is in flight
+const ACCESS_TOKEN_EXPIRY_LEEWAY_SECONDS = 30;
 
 export abstract class SignalsCore {
   baseUrl: string;
@@ -36,6 +38,7 @@ export abstract class SignalsCore {
   apiKey?: string;
   sandboxToken?: string;
   private accessToken: string | undefined = undefined;
+  private accessTokenRequest: Promise<string> | undefined = undefined;
 
   constructor(params: SignalsCoreOptions | SignalsCoreSandboxOptions) {
     // Validate required parameters first
@@ -85,10 +88,18 @@ export abstract class SignalsCore {
           "X-Signals-Sdk-Name": X_SIGNALS_SDK_NAME,
         },
       });
+      if (response.status < 200 || response.status >= 400) {
+        throw new Error(`Token request failed with status ${response.status}`);
+      }
       const responseJson = await response.json();
-      return responseJson["accessToken"];
+      const accessToken = responseJson["accessToken"];
+      if (typeof accessToken !== "string" || !accessToken) {
+        throw new Error("Token response did not include an accessToken");
+      }
+      return accessToken;
     } catch (e) {
-      throw new Error("[Signals] Failed to fetch access token");
+      const reason = e instanceof Error ? e.message : String(e);
+      throw new Error(`[Signals] Failed to fetch access token: ${reason}`);
     }
   }
 
@@ -195,20 +206,36 @@ export abstract class SignalsCore {
     return formatGetBatchAttributesResponse(result);
   }
 
-  private async _checkToken(token: string | undefined): Promise<string> {
+  private async _checkToken(): Promise<string> {
     if (this.authMode === 'sandbox') {
       // Sandbox tokens don't expire, always return the sandbox token
       return this.sandboxToken!;
     }
 
     // BDP token management with expiration checking
-    if (token === undefined) {
-      return await this._fetchToken();
-    } else if (isJwtExpired(token)) {
-      // TODO: Can optimize slightly by storing the expiration time directly.
-      return await this._fetchToken();
-    } else {
-      return token;
+    // TODO: Can optimize slightly by storing the expiration time directly.
+    if (
+      this.accessToken !== undefined &&
+      !isJwtExpired(this.accessToken, ACCESS_TOKEN_EXPIRY_LEEWAY_SECONDS)
+    ) {
+      return this.accessToken;
+    }
+
+    // Share a single in-flight token request between concurrent callers,
+    // so a burst of requests on a cold or expired token fetches it only once
+    if (!this.accessTokenRequest) {
+      this.accessTokenRequest = this._refreshToken();
+    }
+    return this.accessTokenRequest;
+  }
+
+  private async _refreshToken(): Promise<string> {
+    try {
+      this.accessToken = await this._fetchToken();
+      return this.accessToken;
+    } finally {
+      // Cleared on failure too, so the next caller retries instead of reusing a rejected request
+      this.accessTokenRequest = undefined;
     }
   }
 
@@ -216,8 +243,7 @@ export abstract class SignalsCore {
     url: string,
     options: SignalsFetchOptions
   ): Promise<SignalsFetchResponse> {
-    const accessToken = await this._checkToken(this.accessToken);
-    this.accessToken = accessToken;
+    const accessToken = await this._checkToken();
     options.headers.Authorization =
       options.headers.Authorization || `Bearer ${accessToken}`;
 
