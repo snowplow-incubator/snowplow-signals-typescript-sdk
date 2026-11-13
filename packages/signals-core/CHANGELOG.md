@@ -1,5 +1,12 @@
 # @snowplow/signals-core
 
+## 0.4.3
+
+### Patch Changes
+
+- fed0508: Fetch the BDP access token once when concurrent requests find it missing or expired, instead of once per request. The token is now refreshed 30 seconds before it expires, and an error or empty token response now fails with `Failed to fetch access token` instead of sending `Bearer undefined`. The error message now includes the underlying reason.
+- e60c904: Export `SnowplowStandardAttributeKeys` as a value, so the enum members can be used at runtime (for example `SnowplowStandardAttributeKeys.DOMAIN_SESSION_ID`) instead of only as a type.
+
 ## 0.4.2
 
 ### Patch Changes
