@@ -1,5 +1,6 @@
 export { SignalsCore } from "./SignalsCore";
 export { SignalsAPIError } from "./errors";
+export { SnowplowStandardAttributeKeys } from "./types";
 export type { AgenticContextResponse } from "./models/AgenticContextResponse";
 export type {
   SignalsCoreOptions,
@@ -8,7 +9,6 @@ export type {
   SignalsFetchResponse,
   GetServiceAttributesRequest,
   GetGroupAttributesRequest,
-  SnowplowStandardAttributeKeys,
   GetBatchServiceAttributesRequest,
   GetAgenticContextRequest,
   AgenticContextFormat,

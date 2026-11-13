@@ -1,8 +1,8 @@
 export { Signals } from "./Signals";
+export { SnowplowStandardAttributeKeys } from "@snowplow/signals-core";
 export type {
   GetServiceAttributesRequest,
   GetGroupAttributesRequest,
-  SnowplowStandardAttributeKeys,
   GetBatchServiceAttributesRequest,
   GetAgenticContextRequest,
   AgenticContextFormat,
