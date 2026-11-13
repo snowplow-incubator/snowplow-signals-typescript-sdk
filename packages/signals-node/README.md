@@ -2,6 +2,7 @@
 
 # Snowplow Signals Node.js SDK
 
+[![Discord][discord-image]][discord]
 [![Early Release][early-release-image]][early-release]
 [![Build][build-image]][build-url]
 [![npm version][npm-image]][npm-url]
@@ -180,6 +181,8 @@ limitations under the License.
 [repo-url]: https://github.com/snowplow-incubator/snowplow-signals-typescript-sdk
 [changelog]: https://github.com/snowplow-incubator/snowplow-signals-typescript-sdk/blob/main/packages/signals-node/CHANGELOG.md
 [contributing]: https://github.com/snowplow-incubator/snowplow-signals-typescript-sdk/blob/main/CONTRIBUTING.md
+[discord]: https://discord.gg/6hhMCYNCG
+[discord-image]: https://img.shields.io/discord/1570041314370781214?label=Discord&logo=discord&logoColor=white&color=5865F2
 [early-release]: https://github.com/snowplow/snowplow/wiki/Tracker-Maintenance-Classification
 [early-release-image]: https://img.shields.io/static/v1?style=flat&label=Snowplow&message=Early%20Release&color=014477&labelColor=9ba0aa
 [build-url]: https://github.com/snowplow-incubator/snowplow-signals-typescript-sdk/actions/workflows/ci.yml
