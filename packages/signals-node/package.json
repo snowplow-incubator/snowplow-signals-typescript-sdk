@@ -10,9 +10,17 @@
   "author": "Snowplow <support@snowplow.io>",
   "license": "SEE LICENSE IN LICENSE",
   "description": "Node.js SDK for Snowplow Signals — retrieve user attributes and agentic context for real-time customer context & digital personalization",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snowplow-incubator/snowplow-ai-typescript-sdk.git",
+    "directory": "packages/signals-node"
+  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.10",
@@ -24,7 +32,7 @@
   },
   "dependencies": {
     "@snowplow/signals-core": "^0.4.2",
-    "axios": "1.19.0"
+    "axios": "^1.21.1"
   },
   "files": [
     "dist"
