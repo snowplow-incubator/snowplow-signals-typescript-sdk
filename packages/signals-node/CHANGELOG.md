@@ -1,5 +1,22 @@
 # @snowplow/signals-node
 
+## 0.5.0
+
+### Minor Changes
+
+- b90421c: Add `getPredictiveAttributeScore` method to score a published predictive attribute for an entity from the `GET /api/v1/predictive_attribute` endpoint. Takes one identifier per attribute key used by the model's input attribute groups and returns a `PredictiveAttributeScore`.
+
+### Patch Changes
+
+- 07f7d69: Update `axios` from a pinned `1.19.0` to `^1.21.1` to resolve high-severity advisories (prototype-pollution gadgets, redirect-based SSRF, header injection, ReDoS, and HTTP/2 DNS/proxy-control bypass), which also pulls in a patched `follow-redirects`. No public API changes.
+- fed0508: Fetch the BDP access token once when concurrent requests find it missing or expired, instead of once per request. The token is now refreshed 30 seconds before it expires, and an error or empty token response now fails with `Failed to fetch access token` instead of sending `Bearer undefined`. The error message now includes the underlying reason.
+- e60c904: Export `SnowplowStandardAttributeKeys` as a value, so the enum members can be used at runtime (for example `SnowplowStandardAttributeKeys.DOMAIN_SESSION_ID`) instead of only as a type.
+- Updated dependencies [07f7d69]
+- Updated dependencies [fed0508]
+- Updated dependencies [e60c904]
+- Updated dependencies [b90421c]
+  - @snowplow/signals-core@0.5.0
+
 ## 0.4.2
 
 ### Patch Changes
