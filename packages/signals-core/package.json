@@ -13,7 +13,7 @@
   "description": "Transport-agnostic core for building Snowplow Signals SDKs for real-time customer context & digital personalization",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snowplow-incubator/snowplow-ai-typescript-sdk.git",
+    "url": "git+https://github.com/snowplow-incubator/snowplow-signals-typescript-sdk.git",
     "directory": "packages/signals-core"
   },
   "main": "dist/index.js",

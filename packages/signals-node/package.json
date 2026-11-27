@@ -12,7 +12,7 @@
   "description": "Node.js SDK for Snowplow Signals — retrieve user attributes and agentic context for real-time customer context & digital personalization",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snowplow-incubator/snowplow-ai-typescript-sdk.git",
+    "url": "git+https://github.com/snowplow-incubator/snowplow-signals-typescript-sdk.git",
     "directory": "packages/signals-node"
   },
   "main": "dist/index.js",
