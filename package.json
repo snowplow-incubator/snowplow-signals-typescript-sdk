@@ -24,6 +24,6 @@
     "@changesets/cli": "^3.0.3",
     "@types/node": "^26.6.6",
     "rimraf": "^6.0.1",
-    "typescript": "^5.8.2"
+    "typescript": "^7.0.2"
   }
 }
