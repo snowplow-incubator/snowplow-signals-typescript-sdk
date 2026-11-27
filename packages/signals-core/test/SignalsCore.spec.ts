@@ -408,6 +408,31 @@ describe("SignalsCore", () => {
       expect(result).toEqual(responseBody);
     });
 
+    it("returns the score tier when the score falls in one", async () => {
+      const responseBody = {
+        name: "purchase_propensity",
+        version: 2,
+        minor_version: 0,
+        score: 0.42,
+        tier: "hot",
+      };
+      const mockResponse: SignalsFetchResponse = {
+        status: 200,
+        json: jest.fn().mockResolvedValue(responseBody),
+        text: jest.fn().mockResolvedValue(JSON.stringify(responseBody)),
+      };
+
+      const signalsCore = newSignalsCore();
+      signalsCore.mockFetch = jest.fn().mockResolvedValue(mockResponse);
+
+      const result = await signalsCore.getPredictiveAttributeScore({
+        name: "purchase_propensity",
+        identifiers: { domain_sessionid: "abc" },
+      });
+
+      expect(result.tier).toBe("hot");
+    });
+
     it("rejects an identifier named name without making a request", async () => {
       const signalsCore = newSignalsCore();
       signalsCore.mockFetch = jest.fn();
